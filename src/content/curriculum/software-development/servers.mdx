@@ -1,0 +1,82 @@
+---
+title: Servers in Software Development
+summary: How servers process requests, enforce business rules, and manage data reliably.
+status: published
+visibility: public
+updatedAt: 2026-04-05
+tags:
+  - software
+  - servers
+  - backend
+---
+
+import Alert from '../../../components/Alert.astro';
+
+## What is a server?
+
+A server is software that listens for requests, runs application logic, and returns responses. It is typically responsible for data access, permissions, and core business rules.
+
+## Typical server responsibilities
+
+| Responsibility | Examples |
+| --- | --- |
+| Routing | Mapping URLs to handlers |
+| Business logic | Pricing rules, workflow rules, eligibility checks |
+| Data access | Reading/writing databases and storage systems |
+| Security enforcement | Auth checks, authorization, rate limiting |
+| Response formatting | JSON APIs, HTML responses, status codes |
+
+## Request lifecycle on a server
+
+1. Receive request.
+2. Validate input.
+3. Authorize action.
+4. Execute business logic.
+5. Read/write data store.
+6. Return response with status and payload.
+
+## Why servers matter
+
+Servers protect correctness and consistency. They are where cross-user rules are applied and where persistent system behavior is enforced.
+
+## Design, testing, and security themes
+
+### Design theme (server side)
+
+- Separate routing, business logic, and data-access layers.
+- Keep domain rules centralized so every client sees the same behavior.
+- Design for observability from the start (structured logs and meaningful errors).
+
+### Testing theme (server side)
+
+| Test type | What it validates |
+| --- | --- |
+| Unit tests | Core business functions and rule evaluation |
+| Integration tests | Database and external service boundaries |
+| API contract tests | Request/response shape and error semantics |
+
+### Security theme (server side)
+
+- Validate and authorize every sensitive action.
+- Apply rate limits and abuse controls.
+- Use parameterized queries and safe ORM patterns.
+- Manage secrets via environment/runtime, not source code.
+
+## Deep dive: databases as part of servers
+
+Database systems are usually a server-side concern because they are part of persistence, consistency, and backend policy enforcement.
+
+Continue to the dedicated module:
+
+- [Databases for Server Development](/curriculum/software-development/servers/databases/)
+
+<Alert tone="info" title="Server principle">
+Keep business rules centralized on the server so behavior stays consistent across web, mobile, and future clients.
+</Alert>
+
+## Common pitfalls
+
+- Mixing route logic and domain logic in one large file.
+- Incomplete input validation and poor error boundaries.
+- Missing observability (logs, metrics, tracing).
+- No clear separation between public and internal APIs.

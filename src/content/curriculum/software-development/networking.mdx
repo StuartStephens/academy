@@ -1,0 +1,85 @@
+---
+title: Networking Fundamentals for Software Development
+summary: Practical networking concepts developers use to connect clients, servers, and distributed systems.
+status: published
+visibility: public
+updatedAt: 2026-04-05
+tags:
+  - software
+  - networking
+  - backend
+---
+
+import Alert from '../../../components/Alert.astro';
+
+## Why networking matters for developers
+
+Most modern applications are distributed. Even simple apps depend on network calls between browsers, APIs, databases, and third-party services.
+
+## Core concepts to know
+
+| Concept | What it means |
+| --- | --- |
+| IP address | Identifier for a host on a network |
+| DNS | Converts domain names to IP addresses |
+| Port | Logical channel for network services (for example, 80, 443) |
+| Protocol | Rules for communication (HTTP, TCP, UDP, TLS) |
+| Latency | Time delay between request and response |
+
+## Web request path (simplified)
+
+1. Client resolves domain with DNS.
+2. Client opens connection to server endpoint.
+3. Client sends HTTP request.
+4. Server responds with status, headers, and payload.
+5. Client processes response.
+
+## Common HTTP concepts
+
+- **Methods**: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`
+- **Status codes**: `2xx` success, `4xx` client issues, `5xx` server issues
+- **Headers**: metadata for caching, auth, content type, and control
+- **TLS/HTTPS**: encrypts traffic between client and server
+
+## Design, testing, and security themes
+
+### Design theme (networking)
+
+- Design APIs for idempotency where retries are expected.
+- Use timeouts and backoff to handle unpredictable networks.
+- Make failure modes explicit in API contracts.
+
+### Testing theme (networking)
+
+| Test type | What it validates |
+| --- | --- |
+| Contract tests | Endpoint behavior and schema stability |
+| Load tests | Throughput, latency, and saturation behavior |
+| Chaos/failure tests | Retry behavior, timeout handling, and resilience |
+
+### Security theme (networking)
+
+- Enforce HTTPS/TLS in all environments.
+- Use strict transport and secure header policies.
+- Protect APIs with authentication, authorization, and rate controls.
+- Log and monitor anomalous traffic patterns.
+
+## Developer-relevant networking issues
+
+- Timeouts and retries
+- Packet loss and intermittent connectivity
+- API rate limits
+- CORS behavior in browsers
+- Load balancing and horizontal scale patterns
+
+<Alert tone="warning" title="Practical reminder">
+A feature that works on localhost may still fail in production due to DNS, TLS, firewalls, proxies, or network latency.
+</Alert>
+
+## Basic debugging checklist
+
+1. Confirm host and port.
+2. Verify DNS resolution.
+3. Check response status code and headers.
+4. Inspect server logs and request IDs.
+5. Reproduce with a direct HTTP client when possible.

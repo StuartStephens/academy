@@ -1,0 +1,70 @@
+---
+title: Databases for Server Development
+summary: How databases fit under server architecture, with practical design, testing, and security themes.
+status: published
+visibility: public
+updatedAt: 2026-04-05
+tags:
+  - software
+  - servers
+  - databases
+  - backend
+---
+
+import Alert from '../../../../components/Alert.astro';
+
+## Why databases belong under servers
+
+Databases are usually operated behind server APIs, not directly by end users. Servers enforce business rules, then use databases for durable storage and retrieval.
+
+In this architecture, the database is part of the server-side system boundary.
+
+## Core database concepts for backend work
+
+| Concept | Practical meaning |
+| --- | --- |
+| Schema | Structure of tables/collections and field types |
+| Index | Data structure that speeds up specific queries |
+| Transaction | Group of operations treated as one atomic unit |
+| Constraint | Rule that protects data integrity |
+| Query plan | How the database executes and optimizes a query |
+
+## Relational vs document models
+
+| Model | Strengths | Typical tradeoff |
+| --- | --- | --- |
+| Relational (SQL) | Strong consistency, joins, mature tooling | Schema evolution requires planning |
+| Document (NoSQL) | Flexible structure, easy nested records | Complex cross-record relationships can be harder |
+
+## Design theme (database)
+
+- Model entities around real domain relationships.
+- Add indexes based on query patterns, not assumptions.
+- Use migrations with clear rollback strategy.
+- Keep write paths simple and predictable.
+
+## Testing theme (database)
+
+| Test type | What it validates |
+| --- | --- |
+| Migration tests | Schema changes apply safely |
+| Integration tests | Query behavior against realistic data |
+| Performance tests | Index effectiveness and query latency |
+
+## Security theme (database)
+
+- Use least-privilege DB credentials.
+- Prevent injection with parameterized queries.
+- Encrypt data in transit and protect backups.
+- Limit direct production access and audit critical operations.
+
+<Alert tone="info" title="Backend principle">
+Treat data integrity as a product feature. Reliable schemas and safe queries are as important as UI quality.
+</Alert>
+
+## Common pitfalls
+
+- Missing indexes on high-traffic query paths.
+- Over-indexing and hurting write performance.
+- Ignoring transaction boundaries for related writes.
+- Mixing business logic into ad-hoc SQL scattered across code.

@@ -1,0 +1,73 @@
+---
+title: Clients in Software Development
+summary: How client applications work, what they are responsible for, and how they interact with APIs and users.
+status: published
+visibility: public
+updatedAt: 2026-04-05
+tags:
+  - software
+  - clients
+  - frontend
+---
+
+import Alert from '../../../components/Alert.astro';
+
+## What is a client?
+
+A client is software that requests data or actions from another system, usually a server. In web development, the browser is commonly the client.
+
+## Typical client responsibilities
+
+| Responsibility | Examples |
+| --- | --- |
+| User interface | Forms, buttons, navigation, layout |
+| Input handling | Validation, field formatting, error messages |
+| State management | Tracking user selections and view state |
+| API communication | Fetching/sending data to backend endpoints |
+| Feedback loops | Loading indicators, retries, and notifications |
+
+## Web client flow
+
+1. User takes an action (click, submit, navigate).
+2. Client validates and structures the request.
+3. Client calls an API endpoint.
+4. Client renders success/error response.
+5. State updates and interface re-renders.
+
+## Why clients matter
+
+Even with strong backend logic, a weak client can make software feel slow or confusing. Good client design improves usability, trust, and completion rates.
+
+## Design, testing, and security themes
+
+### Design theme (client side)
+
+- Model UI around user tasks, not around component files.
+- Keep client state minimal and predictable.
+- Prefer progressive enhancement so core actions still work in constrained environments.
+
+### Testing theme (client side)
+
+| Test type | What it validates |
+| --- | --- |
+| Unit tests | Small UI/state logic behavior |
+| Integration tests | Component interactions and API boundary behavior |
+| End-to-end tests | Real user flows in a browser |
+
+### Security theme (client side)
+
+- Treat all client input as untrusted until server validation.
+- Avoid exposing secrets/tokens in browser code.
+- Sanitize or safely render user-generated content.
+- Use secure cookie/session strategies in coordination with backend.
+
+<Alert tone="info" title="Client principle">
+Treat the client as the user experience layer, not the source of truth for sensitive business rules.
+</Alert>
+
+## Common pitfalls
+
+- Assuming client-side validation is enough for security.
+- Over-fetching data that the view does not need.
+- Inconsistent error handling across screens.
+- Ignoring accessibility and keyboard interactions.

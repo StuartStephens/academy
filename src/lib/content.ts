@@ -39,7 +39,9 @@ export async function getCurriculums() {
 
 export async function getPublicCurriculums() {
   const curriculums = await getCurriculums();
-  return curriculums.filter((item) => item.status === 'published' && item.visibility === 'public');
+  return curriculums.filter(
+    (item) => item.status === 'published' && item.visibility === 'public' && !item.slug.includes('/')
+  );
 }
 
 export async function getCurriculumBySlug(slug: string) {
