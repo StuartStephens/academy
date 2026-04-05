@@ -1,43 +1,48 @@
-# Astro Starter Kit: Minimal
+# Field Notes Curriculum
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Markdown-first curriculum site built with Astro and UnoCSS. This is a local-content MVP with MDX component support and a clean adapter path for adding Sanity later.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Stack
 
-## 🚀 Project Structure
+- Astro 4
+- MDX integration (`@astrojs/mdx`)
+- UnoCSS with typography preset
+- Astro content collections for curriculum entries
 
-Inside of your Astro project, you'll see the following folders and files:
+## Content Authoring
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- Create new pages in `src/content/curriculum/*.mdx`
+- Required frontmatter:
+  - `title`
+  - `summary`
+  - `status`: `draft` or `published`
+  - `visibility`: `public` or `unlisted`
+  - `updatedAt`: date
+- Optional frontmatter:
+  - `tags`: string array
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Only `published + public` entries appear on the homepage.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## MDX Components
 
-Any static assets, like images, can be placed in the `public/` directory.
+Use these components directly in MDX pages:
 
-## 🧞 Commands
+- `Alert` from `src/components/Alert.astro`
+- `YoutubeEmbed` from `src/components/YoutubeEmbed.astro`
 
-All commands are run from the root of the project, from a terminal:
+## Commands
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- `npm install` - install dependencies
+- `npm run dev` - run local development server
+- `npm run check:spec` - validate content spec/frontmatter rules
+- `npm run build` - run spec checks, then create production build in `dist/`
+- `npm run preview` - preview built site locally
 
-## 👀 Want to learn more?
+## Key Paths
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- `src/pages/index.astro` - curriculum list page
+- `src/pages/curriculum/[slug].astro` - curriculum detail route
+- `src/lib/content.ts` - content adapter layer (swap internals when adding Sanity)
+- `src/content/config.ts` - collection schema
+- `specs/mvp-curriculum-site-spec.norg` - draft MVP product/technical spec
+- `AGENTS.md` - repository guidance for coding agents

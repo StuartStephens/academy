@@ -1,0 +1,24 @@
+---
+type Props = {
+  tone?: 'info' | 'warning' | 'success';
+  title?: string;
+};
+
+const { tone = 'info', title } = Astro.props;
+
+const styles = {
+  info: 'border-accent/35 bg-accentSoft/60 text-ink-900',
+  warning: 'border-warning/35 bg-amber-100/65 text-ink-900',
+  success: 'border-success/35 bg-emerald-100/65 text-ink-900',
+};
+---
+
+<aside class:list={[
+  'my-6 rounded-xl border px-4 py-3 text-sm/relaxed shadow-sm',
+  styles[tone],
+]}>
+  {title && <p class="m-0 mb-2 font-display text-base">{title}</p>}
+  <div class="[&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+    <slot />
+  </div>
+</aside>

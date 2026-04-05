@@ -1,17 +1,25 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CurriculumCard from '../components/CurriculumCard.astro';
+import { getPublicCurriculums } from '../lib/content';
 
+const items = await getPublicCurriculums();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Field Notes Curriculum"
+  description="Published curriculum notes with links, tables, and embedded references."
+>
+  <section class="max-w-3xl">
+    <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Knowledge Base</p>
+    <h1 class="mt-3 font-display text-4xl text-ink-900 md:text-5xl">Pick a curriculum and read through.</h1>
+    <p class="mt-4 text-lg text-ink-700">
+      A curated set of publishable notes. Pages can include links, markdown tables,
+      embeds, and data-focused references.
+    </p>
+  </section>
+
+  <section class="mt-10 grid gap-5 md:grid-cols-2">
+    {items.map((item) => <CurriculumCard item={item} />)}
+  </section>
+</BaseLayout>

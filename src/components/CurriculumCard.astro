@@ -1,0 +1,27 @@
+---
+import type { Curriculum } from '../lib/content';
+
+type Props = {
+  item: Curriculum;
+};
+
+const { item } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+}).format(item.updatedAt);
+---
+
+<article class="group rounded-2xl border border-ink-100 bg-white/85 p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md">
+  <p class="m-0 text-xs uppercase tracking-[0.16em] text-ink-500">Curriculum</p>
+  <h2 class="mt-2 font-display text-2xl text-ink-900">
+    <a class="no-underline" href={`/curriculum/${item.slug}/`}>{item.title}</a>
+  </h2>
+  <p class="mt-2 text-ink-700">{item.summary}</p>
+  <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-ink-500">
+    <span class="rounded-full bg-ink-100 px-2 py-1">Updated {formattedDate}</span>
+    {item.tags.map((tag) => <span class="rounded-full bg-accentSoft px-2 py-1 text-accent">#{tag}</span>)}
+  </div>
+</article>

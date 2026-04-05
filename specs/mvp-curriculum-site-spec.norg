@@ -1,0 +1,135 @@
+* Spec: Curriculum Publisher MVP
+
+** Document Meta
+*** Status: Draft v0.1
+*** Owner: Product/Content Admin
+*** Repo: testing
+*** Last Updated: 2026-04-05
+
+** Product Intent
+*** Problem
+Creators need a simple way to publish structured educational pages on the web without adding account systems, progress tracking, or external data integrations.
+
+*** Goal
+Ship a markdown-first curriculum site that supports readable public pages and controlled publishing states.
+
+*** Success Criteria
+- Content owner can create and publish pages quickly.
+- Readers can browse and open curriculum pages on desktop and mobile.
+- Draft content remains hidden from public listing.
+
+** Scope
+*** In Scope (MVP)
+- Public curriculum listing page.
+- Curriculum detail pages rendered from MDX.
+- Publishing controls through frontmatter (`status`, `visibility`).
+- Basic embedded content components (alerts, YouTube).
+- Static site build and deployment readiness.
+
+*** Out of Scope (MVP)
+- User authentication and roles.
+- Progress tracking and social collaboration.
+- CMS integration (Sanity planned for later).
+- External database ingestion.
+- In-app WYSIWYG editing.
+
+** User Roles
+*** Content Owner (Primary)
+- Writes and edits MDX in repository.
+- Controls publish state and visibility.
+
+*** Reader (Public)
+- Views published curriculum entries.
+- Navigates index and individual pages.
+
+** Information Architecture
+- Home (`/`) lists all `published + public` curriculum entries.
+- Detail route (`/curriculum/[slug]/`) renders an individual entry.
+- Slug derives from content filename.
+
+** Content Model (Current)
+*** Collection
+- `curriculum` in `src/content/curriculum/*.mdx`
+
+*** Required Frontmatter
+- `title: string`
+- `summary: string`
+- `status: draft | published`
+- `visibility: public | unlisted`
+- `updatedAt: date`
+
+*** Optional Frontmatter
+- `tags: string[]`
+
+*** Rendering Rules
+- Home page includes only entries where `status=published` and `visibility=public`.
+- Dynamic route is generated only for `status=published` entries.
+- If an entry is not `public`, route redirects to `/`.
+
+** Technical Architecture
+*** Stack
+- Astro 4
+- MDX integration
+- UnoCSS (+ typography preset)
+- Astro content collections
+
+*** Key Files
+- `src/pages/index.astro`
+- `src/pages/curriculum/[slug].astro`
+- `src/content/config.ts`
+- `src/lib/content.ts`
+- `src/content/curriculum/*.mdx`
+
+*** Adapter Pattern
+Content reads are abstracted in `src/lib/content.ts` to allow migration from local MDX to Sanity later with minimal UI changes.
+
+** Editorial Workflow
+1. Create or edit MDX file in `src/content/curriculum/`.
+2. Set frontmatter fields.
+3. Run local preview and build checks.
+4. Merge and deploy static build.
+
+** Non-Functional Requirements
+*** Performance
+- Static pages should load quickly on typical mobile networks.
+
+*** Reliability
+- Build must fail on invalid content schema.
+
+*** Maintainability
+- Use reusable components and a stable content adapter layer.
+
+*** Accessibility
+- Semantic headings, readable contrast, responsive layout.
+
+** Current Published Topics
+- Intro to software development.
+- Massage learning and therapist pathway.
+- Automotive mechanic foundations.
+- Marine mechanic basics.
+- Aircraft maintenance basics.
+- Real estate construction materials.
+- Human anatomy focused on muscles.
+- Nutrition biology of meats and fruits.
+
+** Roadmap (Post-MVP)
+*** Phase 2: CMS Integration
+- Replace MDX source with Sanity-backed content via adapter layer.
+- Add preview workflow for draft content.
+
+*** Phase 3: Collaboration
+- Add authentication, editorial roles, and revision history.
+
+*** Phase 4: Learning Platform Features
+- Add progress tracking and optional social/collaboration modules.
+
+** Open Questions
+- Should `unlisted` pages be accessible by direct URL in production?
+- Do we need taxonomy landing pages by domain (Trades, Health, Aviation, Real Estate)?
+- What is the desired publishing cadence and review process?
+
+** Acceptance Criteria (MVP)
+- At least 8 published curriculum entries are visible on home page.
+- Each entry route renders without build/runtime errors.
+- Draft entries are not listed publicly.
+- `npm run build` succeeds locally.
