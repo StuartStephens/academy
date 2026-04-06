@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Alert from '../../components/Alert.astro';
 import YoutubeEmbed from '../../components/YoutubeEmbed.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('curriculum');
@@ -16,12 +17,15 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
 const isPublic = entry.data.visibility === 'public';
 
 if (!isPublic) {
   return Astro.redirect('/');
 }
+
+const words = entry.body.split(/\s+/).length;
+const readingMinutes = Math.max(1, Math.round(words / 230));
 ---
 
 <BaseLayout title={`${entry.data.title} | Field Notes Curriculum`} description={entry.data.summary}>
@@ -30,7 +34,10 @@ if (!isPublic) {
       <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Curriculum Entry</p>
       <h1 class="mt-3 font-display text-4xl text-ink-900">{entry.data.title}</h1>
       <p class="mt-3 text-lg text-ink-700">{entry.data.summary}</p>
+      <p class="mt-3 text-xs text-ink-500">{readingMinutes} min read</p>
     </header>
+
+    <TableOfContents headings={headings} />
 
     <div class="prose prose-ink max-w-none prose-headings:font-display prose-a:text-accent">
       <Content components={{ Alert, YoutubeEmbed }} />

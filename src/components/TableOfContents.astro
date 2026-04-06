@@ -1,0 +1,28 @@
+---
+type Props = {
+  headings: { depth: number; slug: string; text: string }[];
+};
+
+const { headings } = Astro.props;
+const filtered = headings.filter((h) => h.depth === 2);
+
+const show = filtered.length >= 4;
+---
+
+{show && (
+  <nav class="mb-8 rounded-xl border border-ink-100 bg-white/60 p-5">
+    <p class="m-0 text-xs uppercase tracking-[0.16em] text-ink-500">On this page</p>
+    <ol class="mt-3 list-none space-y-1.5 p-0">
+      {filtered.map((h) => (
+        <li class="m-0 p-0">
+          <a
+            class="text-sm text-ink-700 no-underline transition hover:text-accent"
+            href={`#${h.slug}`}
+          >
+            {h.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}

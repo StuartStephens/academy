@@ -3,6 +3,8 @@ import { defineCollection, z } from 'astro:content';
 const homepageCategories = [
   'health-biology',
   'nature-outdoors',
+  'mathematics',
+  'cooking',
   'engineering-technology',
   'trades-materials-craft',
   'history-society-belief',

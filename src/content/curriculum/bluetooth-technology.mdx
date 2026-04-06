@@ -1,0 +1,108 @@
+---
+title: Bluetooth Technology
+summary: A practical introduction to Bluetooth, including pairing, radio communication, device profiles, power use, and common real-world issues.
+status: published
+visibility: public
+updatedAt: 2026-04-05
+category: engineering-technology
+homepageOrder: 4
+tags:
+  - bluetooth
+  - wireless
+  - technology
+---
+
+import Alert from '../../components/Alert.astro';
+
+## Why Bluetooth matters
+
+Bluetooth is one of the most common short-range wireless technologies in consumer devices. It supports headphones, keyboards, mice, sensors, car systems, smart home devices, and low-power embedded systems.
+
+## Core topics
+
+| Topic | Why it matters |
+| --- | --- |
+| Pairing and bonding | Determines how devices recognize and reconnect to each other |
+| Radio range and interference | Real-world use depends on environment and signal conditions |
+| Profiles and roles | Different device types support different functions |
+| Bluetooth Low Energy (BLE) | Important for low-power sensors and modern peripherals |
+| Power use | Strongly affects battery life and portable-device design |
+
+## How Bluetooth works
+
+Bluetooth operates in the 2.4 GHz ISM band -- the same frequency range used by Wi-Fi and microwave ovens. It uses **frequency hopping spread spectrum (FHSS)**, rapidly switching between 79 channels (classic) or 40 channels (BLE) to reduce interference.
+
+Communication happens between a **central** device (often a phone or computer) and one or more **peripheral** devices (headphones, sensors, keyboards). The central device initiates connections and manages timing.
+
+## Pairing and bonding
+
+### Pairing
+
+Pairing is the initial handshake where two devices authenticate and establish an encrypted link. Methods vary by device capability:
+
+- **Just Works** -- no user confirmation, lowest security (common for simple peripherals).
+- **Numeric comparison** -- both devices display a number, user confirms they match.
+- **Passkey entry** -- user enters a PIN on one or both devices.
+
+### Bonding
+
+Bonding saves the pairing keys so devices reconnect automatically in the future without repeating the full pairing process. Most consumer devices bond by default after the first successful pair.
+
+<Alert tone="info" title="Troubleshooting tip">
+If a previously paired device won't reconnect, remove it from both devices' saved lists and pair again from scratch. Stale bonding keys are the most common cause of reconnection failures.
+</Alert>
+
+## Bluetooth versions
+
+| Version | Key improvement |
+| --- | --- |
+| 2.0 + EDR | Faster data transfer (up to 3 Mbps) |
+| 4.0 | Introduced Bluetooth Low Energy (BLE) |
+| 4.2 | Improved BLE data capacity and privacy |
+| 5.0 | Doubled range, quadrupled speed for BLE |
+| 5.2 | LE Audio, multi-stream, broadcast audio |
+| 5.3 | Connection subrating, better power management |
+
+Devices negotiate down to the highest version both sides support. A Bluetooth 5.3 phone connecting to a 4.0 speaker will use 4.0 capabilities.
+
+## Classic Bluetooth vs BLE
+
+These are two distinct radio modes, not just versions.
+
+- **Classic Bluetooth** is designed for continuous, higher-bandwidth streams like audio and file transfer. It uses more power.
+- **BLE (Bluetooth Low Energy)** is designed for intermittent, small data exchanges -- heart rate monitors, temperature sensors, location beacons. It uses significantly less power.
+
+Many modern devices support both modes (called **dual-mode**), but a BLE-only device cannot communicate with a classic-only device.
+
+## Profiles
+
+Bluetooth profiles define what a device can do. Both devices must support the same profile to use a given feature.
+
+| Profile | Purpose |
+| --- | --- |
+| A2DP | Stereo audio streaming |
+| HFP | Hands-free phone calls |
+| HID | Keyboards, mice, game controllers |
+| GATT | Generic BLE data exchange (sensors, beacons) |
+| PAN | Network sharing via Bluetooth |
+| PBAP | Phonebook access (car systems) |
+
+## Common practical issues
+
+1. **Pairing failure** -- ensure both devices are in pairing mode, within range, and not already connected to another device.
+2. **Interference** -- crowded 2.4 GHz environments (apartments, offices) degrade quality. Move closer or reduce competing devices.
+3. **Range limits** -- walls, metal, and bodies absorb signal. Advertised 10m range is open-air; expect less indoors.
+4. **Audio latency** -- noticeable delay between video and Bluetooth audio is caused by encoding overhead. Use aptX Low Latency or LE Audio codecs when available.
+5. **Device compatibility** -- check that both devices support the same Bluetooth version and profiles for the feature you need.
+
+<Alert tone="warning" title="Security note">
+Bluetooth is a radio signal that can be intercepted. Avoid pairing in crowded public spaces, disable Bluetooth when not in use, and keep firmware updated to patch known vulnerabilities.
+</Alert>
+
+## Practical study approach
+
+1. Understand the difference between classic Bluetooth and BLE and when each is used.
+2. Learn the pairing and bonding process and how to troubleshoot connection failures.
+3. Check the Bluetooth version and supported profiles on your own devices.
+4. Experiment with range and interference by moving a connected device through different environments.
+5. Read the Bluetooth SIG specifications for any profile you need to implement or deeply understand.

@@ -1,0 +1,107 @@
+---
+title: Electricity
+summary: A practical introduction to electricity, including current, voltage, power, circuits, generation, transmission, and common real-world systems.
+status: published
+visibility: public
+updatedAt: 2026-04-05
+category: engineering-technology
+homepageOrder: 2
+tags:
+  - electricity
+  - engineering
+  - energy
+---
+
+import Alert from '../../components/Alert.astro';
+
+## Why electricity matters
+
+Electricity powers modern infrastructure, communications, lighting, industry, electronics, and transportation. Understanding it helps explain both household systems and large-scale grids.
+
+## Core topics
+
+| Topic | Why it matters |
+| --- | --- |
+| Voltage, current, and resistance | Fundamental concepts for how circuits behave |
+| Power and energy | Explain electrical work and consumption |
+| Circuits | Show how components connect and interact |
+| Generation and transmission | Explain how electricity reaches homes and industry |
+| Safety | Electrical systems can be hazardous if misunderstood |
+
+## Voltage, current, and resistance
+
+These three quantities form the foundation of all circuit analysis.
+
+- **Voltage (V)** is the electrical pressure that pushes charge through a conductor. Measured in volts.
+- **Current (I)** is the flow rate of electric charge. Measured in amperes (amps).
+- **Resistance (R)** is the opposition to current flow. Measured in ohms.
+
+### Ohm's Law
+
+The relationship between these quantities is expressed as **V = I x R**. If you know any two values, you can calculate the third. This single equation is used constantly in circuit design, troubleshooting, and safety analysis.
+
+| Quantity | Symbol | Unit | Measures |
+| --- | --- | --- | --- |
+| Voltage | V | Volts (V) | Electrical pressure |
+| Current | I | Amperes (A) | Charge flow rate |
+| Resistance | R | Ohms (Ω) | Opposition to flow |
+| Power | P | Watts (W) | Energy per second |
+
+Power is calculated as **P = V x I**. A 120V outlet delivering 10A provides 1,200 watts.
+
+## AC vs DC
+
+There are two fundamental types of electrical current.
+
+- **Direct current (DC)** flows in one direction. Batteries, solar cells, and most electronics use DC.
+- **Alternating current (AC)** reverses direction many times per second. Wall outlets in most countries deliver AC at 50 or 60 Hz.
+
+AC is used for power distribution because transformers can efficiently step voltage up for long-distance transmission and back down for local use. DC is dominant inside electronic devices because semiconductors need stable, unidirectional current.
+
+<Alert tone="info" title="Practical tip">
+When a device plugs into a wall outlet and has a power brick or adapter, that adapter is converting AC from the grid into DC for the device.
+</Alert>
+
+## Circuit fundamentals
+
+A circuit is a closed loop that allows current to flow from a source, through a load, and back to the source.
+
+### Series circuits
+
+Components are connected end-to-end in a single path. Current is the same through every component, but voltage divides across them. If one component fails open, the entire circuit stops.
+
+### Parallel circuits
+
+Components share the same two connection points. Voltage is the same across each branch, but current divides among them. If one branch fails, the others continue to operate. Household outlets are wired in parallel so that each device receives full voltage independently.
+
+## Household electrical systems
+
+Most homes receive AC power from the utility grid. In the US, standard outlets provide 120V at 60 Hz. Heavy appliances like dryers and ovens use 240V circuits.
+
+Key components of a household system:
+
+- **Service panel (breaker box)** distributes power to individual circuits and provides overcurrent protection.
+- **Circuit breakers** trip to disconnect a circuit when current exceeds a safe level.
+- **Grounding** provides a safe path for fault current, reducing shock and fire risk.
+- **GFCI outlets** detect imbalances between hot and neutral conductors and cut power within milliseconds to prevent electrocution.
+
+<Alert tone="warning" title="Safety">
+Never work on live circuits without proper training. Household voltage can cause serious injury or death. Always de-energize and verify with a meter before touching wiring.
+</Alert>
+
+## Generation and the grid
+
+Electricity is generated at power plants and delivered through a transmission and distribution network.
+
+1. **Generation**: turbines (driven by steam, water, wind, or combustion) spin generators that convert mechanical energy to electrical energy. Solar panels convert light directly.
+2. **Transmission**: high-voltage lines (115kV--765kV) carry power over long distances with minimal loss.
+3. **Distribution**: substations step voltage down to medium voltage, then transformers near homes reduce it to usable levels (120/240V in the US).
+4. **Consumption**: homes, businesses, and industry draw power from the distribution network.
+
+## Practical study approach
+
+1. Learn Ohm's Law and power formulas until they are automatic.
+2. Build or simulate simple series and parallel circuits.
+3. Understand the difference between AC and DC and when each is used.
+4. Study your own home's breaker panel to see real-world circuit layout.
+5. Practice safe measurement with a multimeter: voltage, current, and continuity.

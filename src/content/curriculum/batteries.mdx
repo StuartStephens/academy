@@ -1,0 +1,115 @@
+---
+title: Batteries
+summary: A practical introduction to batteries, including electrochemistry, common battery types, charging behavior, storage, safety, and real-world applications.
+status: published
+visibility: public
+updatedAt: 2026-04-05
+category: engineering-technology
+homepageOrder: 6
+tags:
+  - batteries
+  - electronics
+  - energy
+---
+
+import Alert from '../../components/Alert.astro';
+
+## Why batteries matter
+
+Batteries store chemical energy and release it as electrical power. They are central to portable electronics, vehicles, backup systems, tools, and grid storage technologies.
+
+## Core topics
+
+| Topic | Why it matters |
+| --- | --- |
+| Battery chemistry | Different chemistries behave differently in cost, safety, and performance |
+| Voltage and capacity | Core metrics for matching batteries to devices |
+| Charging behavior | Incorrect charging shortens lifespan or creates hazards |
+| Storage and degradation | Batteries age over time even when not actively used |
+| Application fit | AA cells, lithium-ion packs, lead-acid batteries, and others serve different roles |
+
+## How batteries work
+
+A battery converts chemical energy to electrical energy through electrochemical reactions. Every battery has three key parts:
+
+- **Anode** (negative terminal) -- releases electrons during discharge.
+- **Cathode** (positive terminal) -- accepts electrons during discharge.
+- **Electrolyte** -- a chemical medium that allows ions to move between electrodes while keeping electrons flowing through the external circuit.
+
+When you connect a load (a flashlight, phone, motor), electrons flow from anode to cathode through the circuit, doing useful work along the way.
+
+### Primary vs rechargeable
+
+- **Primary batteries** (alkaline, lithium primary) are single-use. The chemical reaction is not efficiently reversible.
+- **Rechargeable batteries** (lithium-ion, NiMH, lead-acid) can reverse the reaction by applying external current, restoring stored energy.
+
+## Common battery families
+
+| Chemistry | Voltage per cell | Rechargeable | Common uses |
+| --- | --- | --- | --- |
+| Alkaline | 1.5V | No | Remotes, flashlights, toys |
+| Lithium-ion (Li-ion) | 3.6-3.7V | Yes | Phones, laptops, EVs, power tools |
+| Lithium iron phosphate (LiFePO4) | 3.2V | Yes | Solar storage, RVs, marine, EVs |
+| Nickel-metal hydride (NiMH) | 1.2V | Yes | AA/AAA rechargeables, hybrid vehicles |
+| Lead-acid | 2.0V | Yes | Car starting batteries, UPS systems |
+| Lithium primary (CR2032, etc.) | 3.0V | No | Watches, key fobs, medical devices |
+
+### Lithium-ion in depth
+
+Li-ion dominates modern portable electronics and EVs because of its high energy density (stores more energy per gram) and good cycle life. Variants include:
+
+- **NMC** (nickel manganese cobalt) -- balanced performance, most common in EVs and laptops.
+- **NCA** (nickel cobalt aluminum) -- higher energy density, used by some EV manufacturers.
+- **LFP** (lithium iron phosphate) -- lower energy density but longer cycle life, more thermally stable, no cobalt.
+
+<Alert tone="info" title="Why LFP is growing">
+LFP batteries last 2,000-5,000 cycles vs ~500-1,000 for NMC. They are safer, cheaper, and use no cobalt (an expensive, ethically fraught material). The tradeoff is lower range per kilogram, which matters less in stationary storage and standard-range vehicles.
+</Alert>
+
+## Key specifications
+
+- **Voltage (V)** -- the electrical pressure the battery provides. Devices require specific voltage ranges.
+- **Capacity (Ah or mAh)** -- how much charge the battery holds. A 5,000 mAh phone battery stores more energy than a 3,000 mAh one at the same voltage.
+- **Energy (Wh)** -- voltage multiplied by capacity. This is the true measure of total stored energy: a 3.7V, 5,000 mAh battery holds 18.5 Wh.
+- **C-rate** -- how fast a battery can charge or discharge relative to its capacity. A 1C rate means the full capacity is delivered in one hour.
+- **Cycle life** -- how many charge/discharge cycles the battery can endure before significant capacity loss.
+
+## Charging behavior
+
+### Lithium-ion charging
+
+Li-ion batteries charge in two phases:
+
+1. **Constant current (CC)** -- the charger delivers maximum current until the battery reaches ~80% capacity.
+2. **Constant voltage (CV)** -- voltage is held at the maximum while current tapers. This phase is slower and brings the battery from ~80% to 100%.
+
+This is why the last 20% of a phone charge takes disproportionately long.
+
+### Practices that extend battery life
+
+- Avoid full discharges -- keeping Li-ion between 20-80% reduces stress.
+- Avoid sustained heat during charging (remove phone cases, keep laptops ventilated).
+- Use the manufacturer's charger or a quality equivalent rated for the correct voltage and current.
+- For long-term storage, store at ~50% charge in a cool, dry place.
+
+<Alert tone="warning" title="Battery safety">
+Damaged, swollen, overheated, or punctured lithium batteries can undergo thermal runaway -- a self-accelerating heat reaction that can cause fire or explosion. Never use a battery that is visibly swollen or damaged. Dispose of batteries at proper recycling points, not in household trash.
+</Alert>
+
+## Degradation and aging
+
+All batteries lose capacity over time through:
+
+- **Cycle aging** -- each charge/discharge cycle causes slight chemical degradation.
+- **Calendar aging** -- chemical reactions occur even when the battery sits idle, especially at high temperature or full charge.
+- **Parasitic reactions** -- internal side reactions consume active materials and increase internal resistance.
+
+A typical Li-ion cell retains ~80% capacity after 300-500 full cycles in consumer electronics and 1,000-2,000 cycles in well-managed EV packs.
+
+## Practical study approach
+
+1. Learn the basic electrochemistry: anode, cathode, electrolyte, and how electron flow produces current.
+2. Know the common chemistries and where each is used -- you should be able to identify the battery type in your phone, car, and flashlight.
+3. Understand voltage, capacity, and energy (Wh) well enough to compare batteries across devices.
+4. Practice good charging habits to extend the life of the Li-ion batteries you own.
+5. Study one application in depth -- EV battery packs, home solar storage, or UPS systems -- to see how cells are combined into larger systems with battery management electronics.

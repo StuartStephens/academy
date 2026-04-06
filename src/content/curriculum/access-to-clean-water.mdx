@@ -12,6 +12,8 @@ tags:
   - infrastructure
 ---
 
+import Alert from '../../components/Alert.astro';
+
 ## Why clean water matters
 
 Access to clean water is one of the most important public health achievements in human history. Safe water supports drinking, sanitation, food preparation, disease prevention, and basic human dignity.
@@ -26,9 +28,71 @@ Access to clean water is one of the most important public health achievements in
 | Infrastructure equity | Access varies across regions, income groups, and political systems |
 | Public health | Water quality directly affects infection, nutrition, and survival |
 
-## Key questions
+## Water sources
 
-1. Where does the water come from?
-2. How is it treated and monitored?
-3. What contaminants or pathogens are most relevant?
-4. Who lacks reliable access, and why?
+Not all water sources carry the same risk.
+
+- **Surface water** (rivers, lakes, reservoirs) is abundant but exposed to runoff, agricultural chemicals, and microbial contamination. It almost always requires treatment.
+- **Groundwater** (wells, aquifers) is naturally filtered through soil and rock, often cleaner at the source, but vulnerable to over-extraction and chemical seepage.
+- **Rainwater collection** is viable in some regions but depends on storage quality and local contamination (dust, bird droppings, roofing materials).
+
+### Contamination types
+
+| Category | Examples | Health risk |
+| --- | --- | --- |
+| Microbial | Bacteria (E. coli, cholera), viruses, parasites | Diarrheal disease, dysentery, typhoid |
+| Chemical | Arsenic, lead, nitrates, pesticides | Chronic illness, developmental harm |
+| Physical | Sediment, turbidity | Reduces treatment effectiveness, harbors pathogens |
+
+<Alert tone="warning" title="Leading cause of child death">
+Waterborne diarrheal diseases kill hundreds of thousands of children under five each year, overwhelmingly in regions without reliable water treatment and sanitation infrastructure.
+</Alert>
+
+## Treatment methods
+
+Municipal water treatment typically follows a multi-step process:
+
+1. **Coagulation and flocculation** -- chemicals cause particles to clump together for easier removal.
+2. **Sedimentation** -- heavy clumps settle to the bottom of treatment tanks.
+3. **Filtration** -- water passes through sand, gravel, or activated carbon to remove remaining particles.
+4. **Disinfection** -- chlorine, chloramine, UV light, or ozone kills remaining microorganisms.
+5. **Distribution** -- treated water is pumped through pipes to homes and businesses.
+
+### Point-of-use methods
+
+Where municipal treatment is unavailable, individuals and communities use simpler methods:
+
+- **Boiling** -- effective against most pathogens, but requires fuel and does not remove chemicals.
+- **Ceramic or biosand filters** -- remove bacteria and sediment, low-cost, suitable for household use.
+- **Solar disinfection (SODIS)** -- UV exposure in clear bottles kills many pathogens over 6+ hours.
+- **Chlorine tablets or drops** -- portable, inexpensive, effective for emergency and field use.
+
+<Alert tone="info" title="Practical note">
+No single treatment method handles every contaminant. Effective systems usually combine physical filtration with chemical or UV disinfection.
+</Alert>
+
+## The global access gap
+
+Approximately 2 billion people worldwide lack safely managed drinking water services. The gap is shaped by:
+
+- **Geography** -- arid regions and areas far from freshwater sources face inherent scarcity.
+- **Infrastructure investment** -- building and maintaining treatment plants and pipe networks requires sustained funding.
+- **Governance** -- corruption, conflict, and poor regulation undermine water system reliability.
+- **Climate change** -- shifting rainfall patterns, glacial melt, and extreme weather stress existing systems.
+
+Rural communities, informal settlements, and conflict zones are disproportionately affected.
+
+## Sanitation and hygiene
+
+Clean water and sanitation are inseparable. Without proper waste disposal, water sources become contaminated regardless of treatment capacity.
+
+- **Improved sanitation** means facilities that hygienically separate human waste from contact -- flush toilets, pit latrines with slabs, composting toilets.
+- **Handwashing with soap** at critical times (after using the toilet, before eating) is one of the most cost-effective public health interventions.
+
+## Practical study approach
+
+1. Understand the difference between improved and unimproved water sources as defined by the WHO/UNICEF Joint Monitoring Programme.
+2. Learn the basic steps of municipal water treatment and why each stage matters.
+3. Study at least one point-of-use method in detail -- understand its effectiveness, cost, and limitations.
+4. Examine a case study of a water crisis (Flint, Michigan; cholera in Haiti; Cape Town drought) to see how infrastructure, governance, and public health intersect.
+5. Consider the relationship between water access and other development goals: education, gender equity, economic productivity.

@@ -51,6 +51,44 @@ Build short, complete projects early. A tiny app you can finish teaches more tha
 - **Framework**: gives structure for apps (Astro, Next.js, Django, Rails).
 - **CI/CD**: automates tests and deployments.
 
+## Code examples to start with
+
+A simple function in JavaScript:
+
+```js
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+console.log(greet("world")); // Hello, world!
+```
+
+Basic Git workflow from the command line:
+
+```bash
+git init                    # start a new repository
+git add .                   # stage all changes
+git commit -m "first commit" # save a snapshot
+git log --oneline           # view commit history
+```
+
+A minimal test using Node.js built-in assert:
+
+```js
+import assert from "node:assert";
+
+function add(a, b) {
+  return a + b;
+}
+
+assert.strictEqual(add(2, 3), 5);
+console.log("test passed");
+```
+
+<Alert tone="success" title="Why examples matter">
+Reading code is the fastest way to build intuition. Type these examples out yourself rather than copying -- the muscle memory helps.
+</Alert>
+
 ## First-project roadmap
 
 ### Week 1

@@ -1,0 +1,213 @@
+---
+title: Physics
+summary: A foundational overview of core physics concepts including motion, gravity, pressure, thermodynamics, states of matter, light, lasers, magnetism, and the laws that govern energy and force.
+status: published
+visibility: public
+updatedAt: 2026-04-05
+category: engineering-technology
+homepageOrder: 5
+tags:
+  - physics
+  - science
+  - energy
+---
+
+import Alert from '../../components/Alert.astro';
+
+## Why physics matters
+
+Physics describes the fundamental rules that govern matter, energy, motion, and force. Every engineered system, every natural phenomenon, and every material behavior follows physical laws. Understanding physics gives you a foundation for engineering, chemistry, medicine, construction, and everyday problem-solving.
+
+## Core topics
+
+| Topic | Why it matters |
+| --- | --- |
+| Motion and forces | Explain how objects move and why |
+| Gravity | Governs orbits, tides, falling objects, and structural loads |
+| Pressure | Critical in fluids, gases, weather, hydraulics, and the human body |
+| Thermodynamics | Rules governing heat, energy transfer, and efficiency |
+| States of matter | Determine material behavior and phase changes |
+| Light and optics | Foundation for vision, communication, imaging, and measurement |
+| Lasers | Concentrated light with applications across medicine, industry, and science |
+| Magnetism | Powers motors, generators, data storage, and medical imaging |
+
+## Motion and forces
+
+### Newton's three laws
+
+1. **First law (inertia)**: An object at rest stays at rest, and an object in motion stays in motion at constant velocity, unless acted on by a net external force.
+2. **Second law (F = ma)**: The acceleration of an object equals the net force applied divided by its mass. More force means more acceleration; more mass means less.
+3. **Third law (action-reaction)**: Every action has an equal and opposite reaction. A rocket pushes exhaust downward; the exhaust pushes the rocket upward.
+
+These three laws are sufficient to analyze most everyday mechanical systems -- vehicles, tools, sports, structures.
+
+### Friction
+
+Friction is a contact force that opposes sliding motion between surfaces. It depends on the materials in contact and the normal force pressing them together. Without friction, walking, driving, and gripping would be impossible. With too much friction, machines waste energy as heat.
+
+<Alert tone="info" title="Practical connection">
+When you push a heavy box and it does not move, static friction exactly matches your push. Once you push hard enough to overcome static friction, kinetic friction (usually lower) takes over and the box slides.
+</Alert>
+
+## Gravity
+
+Gravity is the attractive force between any two objects with mass. On Earth's surface, it accelerates objects downward at approximately **9.8 m/s²**.
+
+### Key gravity concepts
+
+- **Weight vs mass**: mass is the amount of matter (kg); weight is the gravitational force on that mass (newtons). Your mass is the same on the Moon, but your weight is about 1/6 of Earth weight.
+- **Free fall**: all objects in a vacuum fall at the same rate regardless of mass. Air resistance is what makes a feather fall slower than a hammer.
+- **Orbital mechanics**: satellites stay in orbit because their forward speed exactly balances gravitational pull, creating continuous free fall around the Earth.
+- **Gravitational potential energy**: the higher an object is lifted, the more stored energy it has. This is the principle behind hydroelectric dams and roller coasters.
+
+## Pressure
+
+Pressure is force distributed over an area: **P = F / A**. The same force applied over a smaller area creates higher pressure, which is why a needle penetrates but a flat palm does not.
+
+### Pressure in fluids
+
+Fluids (liquids and gases) transmit pressure equally in all directions (Pascal's principle). This is the basis of hydraulic systems -- a small force on a small piston creates a large force on a large piston.
+
+| Context | Pressure concept |
+| --- | --- |
+| Atmosphere | Air pressure decreases with altitude (~101.3 kPa at sea level) |
+| Hydraulics | Force multiplication through incompressible fluid |
+| Water depth | Pressure increases ~10 kPa per meter of depth |
+| Tires and inflatables | Internal gas pressure supports load against atmospheric pressure |
+| Blood pressure | Systolic/diastolic values measure arterial pressure during heartbeats |
+
+<Alert tone="warning" title="Pressure hazards">
+Compressed gases store enormous energy. A ruptured pressurized vessel can be as destructive as an explosion. Always follow rated pressure limits and inspect containers for damage.
+</Alert>
+
+### Boyle's Law
+
+At constant temperature, the volume of a gas is inversely proportional to its pressure. Compress a gas to half its volume and the pressure doubles. This explains why scuba divers must ascend slowly -- dissolved gases expand as water pressure decreases.
+
+## Thermodynamics
+
+Thermodynamics governs how energy moves and transforms, especially as heat.
+
+### The four laws
+
+| Law | Statement | Practical meaning |
+| --- | --- | --- |
+| Zeroth | If A is in thermal equilibrium with B, and B with C, then A is in equilibrium with C | Temperature measurement is reliable and transitive |
+| First | Energy cannot be created or destroyed, only transformed | You cannot get more energy out of a system than you put in |
+| Second | Entropy in an isolated system always increases | Heat flows from hot to cold; no engine is 100% efficient |
+| Third | As temperature approaches absolute zero, entropy approaches a minimum | Perfect zero temperature is unreachable |
+
+### Heat transfer mechanisms
+
+- **Conduction**: heat moves through direct contact between molecules. Metal handles get hot because metal conducts well; wooden handles stay cool because wood conducts poorly.
+- **Convection**: heat moves through fluid circulation. Hot air rises, cool air sinks -- this drives weather patterns, heating systems, and cooking.
+- **Radiation**: heat transfers via electromagnetic waves. The Sun warms the Earth through radiation across the vacuum of space. A campfire warms your face by radiation.
+
+<Alert tone="info" title="Why this matters in engineering">
+Every engine, refrigerator, power plant, and heat exchanger is designed around the laws of thermodynamics. The second law sets hard limits on efficiency that no amount of engineering can overcome.
+</Alert>
+
+## States of matter
+
+Matter exists in distinct states depending on temperature and pressure.
+
+| State | Particle behavior | Shape | Volume |
+| --- | --- | --- | --- |
+| Solid | Tightly packed, vibrate in place | Fixed | Fixed |
+| Liquid | Close together, slide past each other | Takes container shape | Fixed |
+| Gas | Far apart, move freely | Fills container | Expands to fill |
+| Plasma | Ionized gas, free electrons | Fills container | Expands to fill |
+
+### Phase changes
+
+- **Melting** (solid to liquid): ice melts at 0°C at standard pressure.
+- **Boiling/evaporation** (liquid to gas): water boils at 100°C at sea level. At higher altitudes (lower pressure), it boils at lower temperatures.
+- **Condensation** (gas to liquid): water vapor cools on a cold glass.
+- **Sublimation** (solid directly to gas): dry ice (solid CO2) sublimates at room temperature without becoming liquid.
+- **Freezing** (liquid to solid): water freezes at 0°C; the expansion of freezing water can burst pipes.
+
+Plasma -- the fourth state -- forms when gas is heated enough to strip electrons from atoms. Stars are plasma. Lightning creates plasma. Fluorescent lights and neon signs contain plasma.
+
+## Light and optics
+
+Light is electromagnetic radiation. Visible light is a narrow band within a much broader electromagnetic spectrum.
+
+### The electromagnetic spectrum
+
+| Region | Wavelength | Common use |
+| --- | --- | --- |
+| Radio waves | > 1 mm | Broadcasting, Wi-Fi, Bluetooth |
+| Microwaves | 1 mm -- 1 m | Cooking, radar, satellite comms |
+| Infrared | 700 nm -- 1 mm | Heat sensing, remote controls, thermal imaging |
+| Visible light | 400 -- 700 nm | Human vision |
+| Ultraviolet | 10 -- 400 nm | Sterilization, black lights, Sun exposure |
+| X-rays | 0.01 -- 10 nm | Medical imaging, security scanning |
+| Gamma rays | < 0.01 nm | Cancer treatment, nuclear processes |
+
+### Key behaviors of light
+
+- **Reflection**: light bounces off surfaces. Angle of incidence equals angle of reflection. This is how mirrors work.
+- **Refraction**: light bends when passing between materials of different density (air to water, air to glass). This is why a straw looks bent in a glass of water, and how lenses focus light.
+- **Diffraction**: light bends around edges and through narrow openings, creating interference patterns. This proves light behaves as a wave.
+- **Absorption**: materials absorb certain wavelengths and reflect or transmit others. A red shirt absorbs most wavelengths and reflects red.
+
+## Lasers
+
+A laser produces coherent, monochromatic, highly directional light. "Laser" stands for Light Amplification by Stimulated Emission of Radiation.
+
+### How lasers differ from ordinary light
+
+| Property | Ordinary light | Laser light |
+| --- | --- | --- |
+| Wavelengths | Many (broad spectrum) | One (monochromatic) |
+| Phase | Random (incoherent) | Aligned (coherent) |
+| Direction | Spreads in all directions | Tight, parallel beam |
+| Intensity | Diffuse | Concentrated |
+
+### Applications
+
+- **Medicine**: eye surgery (LASIK), tumor removal, dental procedures, dermatology.
+- **Manufacturing**: cutting, welding, and engraving metal, wood, and plastics with high precision.
+- **Communication**: fiber optic cables carry laser-encoded data over vast distances at light speed.
+- **Measurement**: laser rangefinders, surveying instruments, and LIDAR (used in autonomous vehicles and topographic mapping).
+- **Science**: spectroscopy, holography, quantum research, and gravitational wave detection.
+
+<Alert tone="warning" title="Laser safety">
+Even low-power lasers can cause permanent eye damage. Never look directly into a laser beam or point one at people, vehicles, or aircraft. Higher-class lasers can burn skin and ignite materials.
+</Alert>
+
+## Magnetism
+
+Magnetism is a force produced by moving electric charges. Every magnet has a north and south pole; like poles repel, opposite poles attract.
+
+### Key concepts
+
+- **Magnetic fields**: invisible force fields surrounding magnets and current-carrying wires. Field lines run from north to south outside the magnet.
+- **Electromagnetism**: electric current creates a magnetic field. A coiled wire (solenoid) with current behaves like a bar magnet. This is the principle behind electromagnets, which can be turned on and off.
+- **Electromagnetic induction**: a changing magnetic field induces electric current in a conductor (Faraday's law). This is how generators and transformers work -- mechanical motion creates electricity, and vice versa.
+- **Permanent magnets**: materials like iron, nickel, and cobalt have aligned atomic magnetic domains that create persistent fields without external current.
+
+### Practical applications
+
+| Application | How magnetism is used |
+| --- | --- |
+| Electric motors | Current in a magnetic field creates rotational force |
+| Generators | Spinning a conductor in a magnetic field produces current |
+| Transformers | Changing current in one coil induces current in another |
+| Hard drives | Data stored as magnetic orientation of tiny domains |
+| MRI machines | Strong magnetic fields align hydrogen atoms for medical imaging |
+| Maglev trains | Magnetic levitation eliminates rail friction for high-speed travel |
+| Compasses | Earth's magnetic field aligns a magnetized needle north-south |
+
+<Alert tone="info" title="Electricity and magnetism are unified">
+James Clerk Maxwell showed in the 1860s that electricity and magnetism are two aspects of the same force -- electromagnetism. This unification is one of the greatest achievements in physics and the foundation of all modern electrical and wireless technology.
+</Alert>
+
+## Practical study approach
+
+1. Start with Newton's laws and force diagrams -- they are the gateway to all of mechanics.
+2. Learn the relationship between pressure, volume, and temperature in gases (Boyle's Law, ideal gas law).
+3. Study the three heat transfer mechanisms and identify examples in your daily environment.
+4. Memorize the electromagnetic spectrum order and the rough wavelength boundaries.
+5. Understand the connection between electricity and magnetism -- motors, generators, and induction are everywhere.
+6. Explore one application area in depth: optics, thermodynamics, or fluid mechanics, depending on your field of interest.

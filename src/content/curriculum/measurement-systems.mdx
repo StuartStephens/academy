@@ -5,12 +5,14 @@ status: published
 visibility: public
 updatedAt: 2026-04-05
 category: engineering-technology
-homepageOrder: 7
+homepageOrder: 10
 tags:
   - measurement
   - units
   - standards
 ---
+
+import Alert from '../../components/Alert.astro';
 
 ## Why measurement systems matter
 
@@ -26,10 +28,81 @@ Reliable measurement makes engineering, trade, science, medicine, manufacturing,
 | Precision and accuracy | Important for quality control and scientific reasoning |
 | Tolerance | Real-world work depends on acceptable variation, not only exact numbers |
 
-## Common measurement categories
+## The metric system (SI)
 
-1. Length and distance.
-2. Mass and weight.
-3. Volume.
-4. Temperature.
-5. Area and force.
+The International System of Units (SI) is built on seven base units from which all other units derive.
+
+| Quantity | Base unit | Symbol |
+| --- | --- | --- |
+| Length | meter | m |
+| Mass | kilogram | kg |
+| Time | second | s |
+| Temperature | kelvin | K |
+| Electric current | ampere | A |
+| Amount of substance | mole | mol |
+| Luminous intensity | candela | cd |
+
+The metric system uses a consistent set of prefixes for scaling: kilo- (1,000), centi- (1/100), milli- (1/1,000), micro- (1/1,000,000), and so on. This makes unit conversion within the system straightforward -- just move the decimal point.
+
+<Alert tone="info" title="Why metric dominates science">
+The prefix system and base-10 structure eliminate most conversion errors. Every country in the world has officially adopted SI, though the US, Liberia, and Myanmar still use non-metric units in daily life.
+</Alert>
+
+## US customary units
+
+The United States uses a system descended from English units. It remains dominant in construction, cooking, road signage, and everyday commerce.
+
+| Measurement | Common units | Metric equivalent |
+| --- | --- | --- |
+| Length | inch, foot, yard, mile | 1 inch = 2.54 cm, 1 mile = 1.609 km |
+| Weight | ounce, pound, ton | 1 lb = 0.4536 kg |
+| Volume | teaspoon, cup, gallon | 1 gallon = 3.785 L |
+| Temperature | Fahrenheit | °F = (°C x 9/5) + 32 |
+
+### When systems collide
+
+Mixed-unit errors have caused real engineering failures. In 1999, NASA lost the Mars Climate Orbiter because one team used pound-force seconds while another used newton-seconds. The spacecraft entered the atmosphere at the wrong altitude and was destroyed.
+
+## Precision vs accuracy
+
+These terms are related but distinct.
+
+- **Accuracy** means how close a measurement is to the true value.
+- **Precision** means how repeatable a measurement is -- how close repeated measurements are to each other.
+
+A tool can be precise but inaccurate (consistently wrong by the same amount) or accurate but imprecise (right on average but scattered). Good measurement requires both.
+
+### Significant figures
+
+Significant figures communicate the precision of a measurement. Reporting a length as 12.0 cm (three significant figures) implies more precision than 12 cm (two significant figures). In calculations, the result should not claim more precision than the least precise input.
+
+## Tolerance in practical work
+
+In manufacturing and construction, no measurement is perfectly exact. **Tolerance** defines the acceptable range of variation.
+
+- A machined part specified as 25.00 mm ± 0.05 mm must fall between 24.95 mm and 25.05 mm.
+- Tighter tolerances cost more because they require better tooling and more careful inspection.
+- Understanding tolerance prevents over-specifying (wasting money) or under-specifying (causing failures).
+
+<Alert tone="warning" title="Common mistake">
+Using a ruler marked in 1/16-inch increments and reporting a measurement to the nearest thousandth of an inch is false precision. The tool's resolution limits the precision you can honestly claim.
+</Alert>
+
+## Common conversion reference
+
+| From | To | Multiply by |
+| --- | --- | --- |
+| inches | centimeters | 2.54 |
+| feet | meters | 0.3048 |
+| miles | kilometers | 1.609 |
+| pounds | kilograms | 0.4536 |
+| gallons (US) | liters | 3.785 |
+| °F to °C | -- | (°F - 32) x 5/9 |
+
+## Practical study approach
+
+1. Memorize the SI base units and the most common prefixes (kilo, centi, milli, micro).
+2. Learn the key US-to-metric conversions for length, weight, volume, and temperature.
+3. Practice estimating: know that a meter is roughly a yard, a kilogram is roughly 2.2 pounds, and a liter is roughly a quart.
+4. Understand significant figures well enough to avoid false precision in your own work.
+5. When working on any project, confirm which measurement system is expected before starting -- never assume.

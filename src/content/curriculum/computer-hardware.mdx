@@ -5,7 +5,7 @@ status: published
 visibility: public
 updatedAt: 2026-04-05
 category: engineering-technology
-homepageOrder: 4
+homepageOrder: 7
 tags:
   - computers
   - hardware
@@ -30,20 +30,85 @@ Computer hardware determines how systems process, store, move, and display infor
 | Power supply | Stable power delivery to system components |
 | Cooling | Thermal control and reliability protection |
 
-## Core questions
+## CPU (Central Processing Unit)
 
-- What component is the performance bottleneck?
-- How do bandwidth, latency, and heat affect behavior?
-- Which parts are upgradeable or replaceable?
-- How do workloads differ between gaming, servers, editing, and general use?
+The CPU executes instructions sequentially at very high speed. Key specs:
 
-## Common study areas
+- **Clock speed** (GHz) -- how many cycles per second. Higher is faster, but architecture matters more than raw clock.
+- **Core count** -- modern CPUs have multiple cores, allowing parallel execution. More cores help with multitasking and parallelizable workloads.
+- **Cache** -- small, fast memory on the CPU die. L1 is fastest and smallest; L3 is largest and slowest. Cache reduces the cost of accessing main RAM.
+- **TDP (thermal design power)** -- indicates how much heat the CPU generates under load. Higher TDP requires better cooling.
 
-1. Component roles and interoperability.
-2. Desktop vs laptop vs server design constraints.
-3. Basic diagnostics and troubleshooting.
-4. Thermal management and power stability.
+### CPU bottlenecks
 
-<Alert tone="info" title="Hardware principle">
-Performance is not just about the fastest part. Balanced systems usually outperform mismatched builds for real-world tasks.
+A CPU bottleneck means the processor cannot feed data to other components fast enough. This is common in tasks with heavy single-threaded logic (gaming at high frame rates, compiling code). Upgrading RAM or GPU will not help if the CPU is the limiting factor.
+
+## RAM (Memory)
+
+RAM is volatile working memory -- fast but temporary. When you open a program, it loads from storage into RAM so the CPU can access it quickly.
+
+- **Capacity** (GB) -- determines how much data can be active simultaneously. 8 GB is minimal for modern use; 16-32 GB is typical for development and creative work.
+- **Speed** (MHz/MT/s) -- affects data transfer rate between RAM and CPU.
+- **Latency** (CAS latency) -- the delay between a request and data delivery. Lower is better.
+
+Running out of RAM forces the system to swap data to storage, which is orders of magnitude slower.
+
+## Storage
+
+| Type | Speed | Cost | Durability |
+| --- | --- | --- | --- |
+| NVMe SSD | Very fast (~3,000-7,000 MB/s) | Higher | No moving parts |
+| SATA SSD | Fast (~500 MB/s) | Moderate | No moving parts |
+| HDD | Slow (~100-200 MB/s) | Lowest per GB | Mechanical, fragile |
+
+NVMe drives connect directly to the CPU via PCIe lanes, bypassing the slower SATA bus. For boot drives and active projects, NVMe is the clear choice. HDDs remain cost-effective for bulk storage and backups.
+
+## GPU (Graphics Processing Unit)
+
+GPUs contain thousands of small cores optimized for parallel math. Originally designed for rendering graphics, they now also accelerate machine learning, video encoding, and scientific simulation.
+
+- **VRAM** -- dedicated memory on the GPU. Insufficient VRAM causes stuttering in games and crashes in ML training.
+- **Compute vs gaming** -- professional and ML GPUs prioritize double-precision math and memory bandwidth. Gaming GPUs prioritize single-precision performance and display output.
+
+<Alert tone="info" title="Integrated vs discrete">
+Integrated GPUs are built into the CPU and share system RAM. They handle basic display and light gaming. Discrete GPUs are separate cards with their own VRAM and far more power, but cost more and draw more electricity.
 </Alert>
+
+## Power supply
+
+The PSU converts AC wall power to DC voltages the components need (12V, 5V, 3.3V). An undersized or low-quality PSU causes instability, random shutdowns, or component damage.
+
+- **Wattage** -- must exceed total system draw with headroom. A 650W PSU is typical for a mid-range desktop.
+- **Efficiency rating** (80 Plus Bronze/Gold/Platinum) -- higher efficiency wastes less power as heat.
+- **Modularity** -- modular PSUs let you connect only the cables you need, improving airflow and cable management.
+
+## Cooling and thermals
+
+Every active component generates heat. Sustained high temperatures reduce performance (thermal throttling) and shorten component lifespan.
+
+- **Air cooling** -- heatsinks with fans. Simple, reliable, sufficient for most builds.
+- **AIO liquid cooling** -- closed-loop radiator systems. Better thermal performance in compact cases or with high-TDP CPUs.
+- **Thermal paste** -- fills microscopic gaps between the CPU and cooler. Must be applied correctly for effective heat transfer.
+- **Case airflow** -- intake fans bring cool air in; exhaust fans push hot air out. Positive pressure (more intake than exhaust) reduces dust buildup.
+
+<Alert tone="warning" title="Common mistake">
+Adding more fans does not always improve cooling. Airflow direction and balance matter more than fan count. Conflicting airflow paths can create dead zones where heat accumulates.
+</Alert>
+
+## Troubleshooting basics
+
+| Symptom | Likely cause | First check |
+| --- | --- | --- |
+| No power at all | PSU failure, loose cable, dead outlet | Test outlet, check 24-pin and CPU power connections |
+| Powers on, no display | GPU not seated, monitor cable, RAM issue | Reseat GPU and RAM, try a different display output |
+| Random crashes under load | Overheating, unstable overclock, failing PSU | Check temps with monitoring software, reset BIOS to defaults |
+| Slow performance | Thermal throttling, full storage, insufficient RAM | Check temps, storage capacity, and RAM usage |
+| Blue screen / kernel panic | Driver issue, bad RAM, storage failure | Update drivers, run memory test, check storage health |
+
+## Practical study approach
+
+1. Learn what each core component does and how they interact over the motherboard bus.
+2. Use monitoring tools (Task Manager, htop, HWMonitor) to observe CPU, RAM, GPU, and storage utilization on your own system.
+3. Identify the bottleneck in your current setup for the workloads you run.
+4. Practice opening a desktop case, identifying components, and understanding cable routing.
+5. Read spec sheets for components you own -- match real-world behavior to advertised numbers.

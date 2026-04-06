@@ -5,6 +5,8 @@ export type CurriculumVisibility = 'public' | 'unlisted';
 export type CurriculumCategory =
   | 'health-biology'
   | 'nature-outdoors'
+  | 'mathematics'
+  | 'cooking'
   | 'engineering-technology'
   | 'trades-materials-craft'
   | 'history-society-belief'
@@ -71,9 +73,17 @@ const homepageSectionMeta: Record<CurriculumCategory, Omit<HomepageSection, 'ite
     title: 'Nature & Outdoors',
     description: 'Plants, animals, geography, agriculture, and practical outdoor competence.',
   },
+  mathematics: {
+    title: 'Mathematics',
+    description: 'Number sense, symbolic reasoning, spatial thinking, and advanced quantitative methods.',
+  },
+  cooking: {
+    title: 'Cooking',
+    description: 'Ingredient handling, heat control, preparation methods, and practical kitchen technique.',
+  },
   'engineering-technology': {
     title: 'Engineering & Technology',
-    description: 'Software, hardware, mechanics, bicycles, airflow, and technical systems.',
+    description: 'Physics, chemistry, software, hardware, energy systems, measurement, and applied technical knowledge.',
   },
   'trades-materials-craft': {
     title: 'Trades, Materials & Craft',
@@ -92,6 +102,8 @@ const homepageSectionMeta: Record<CurriculumCategory, Omit<HomepageSection, 'ite
 const homepageSectionOrder: CurriculumCategory[] = [
   'health-biology',
   'nature-outdoors',
+  'mathematics',
+  'cooking',
   'engineering-technology',
   'trades-materials-craft',
   'history-society-belief',
