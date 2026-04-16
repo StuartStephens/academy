@@ -1,0 +1,25 @@
+---
+import { PortableText } from 'astro-portabletext';
+import type { TypedObject, Props as PortableTextNodeProps } from 'astro-portabletext/types';
+import Alert from '../Alert.astro';
+
+type AlertTone = 'info' | 'warning' | 'success';
+
+type AlertNode = TypedObject & {
+  _type: 'alert';
+  tone?: AlertTone;
+  title?: string;
+  body?: TypedObject[];
+};
+
+type Props = PortableTextNodeProps<AlertNode>;
+
+const { node } = Astro.props;
+const body = Array.isArray(node.body) ? node.body : [];
+
+const tone = node.tone === 'warning' || node.tone === 'success' ? node.tone : 'info';
+---
+
+<Alert tone={tone} title={node.title}>
+  <PortableText value={body} />
+</Alert>

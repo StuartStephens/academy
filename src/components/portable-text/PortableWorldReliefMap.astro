@@ -1,0 +1,12 @@
+---
+import type { TypedObject, Props as PortableTextNodeProps } from 'astro-portabletext/types';
+import WorldReliefMap from '../WorldReliefMap.astro';
+
+type MapNode = TypedObject & {
+  _type: 'worldReliefMap';
+};
+
+type Props = PortableTextNodeProps<MapNode>;
+---
+
+<WorldReliefMap />

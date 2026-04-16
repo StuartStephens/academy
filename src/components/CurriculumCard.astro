@@ -13,8 +13,7 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
 }).format(item.updatedAt);
 
-const words = item.body.split(/\s+/).length;
-const readingMinutes = Math.max(1, Math.round(words / 230));
+const readingMinutes = item.readingMinutes;
 ---
 
 <article class="group rounded-2xl border border-ink-100 bg-white/85 p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md">

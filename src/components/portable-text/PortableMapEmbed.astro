@@ -1,0 +1,23 @@
+---
+import type { TypedObject, Props as PortableTextNodeProps } from 'astro-portabletext/types';
+import WorldMapHighlights from '../WorldMapHighlights.astro';
+import WorldReliefMap from '../WorldReliefMap.astro';
+import WorldStrategicMap from '../WorldStrategicMap.astro';
+
+type MapNode = TypedObject & {
+  _type: 'mapEmbed';
+  mapType?: 'highlights' | 'relief' | 'strategic';
+};
+
+type Props = PortableTextNodeProps<MapNode>;
+
+const { node } = Astro.props;
+---
+
+{node.mapType === 'relief' ? (
+  <WorldReliefMap />
+) : node.mapType === 'strategic' ? (
+  <WorldStrategicMap />
+) : (
+  <WorldMapHighlights />
+)}

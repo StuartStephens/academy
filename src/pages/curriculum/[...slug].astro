@@ -1,46 +1,100 @@
 ---
-import { getCollection } from 'astro:content';
+import { PortableText } from 'astro-portabletext';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import HeadingTwo from '../../components/portable-text/HeadingTwo.astro';
+import PortableAlert from '../../components/portable-text/PortableAlert.astro';
+import PortableYoutubeEmbed from '../../components/portable-text/PortableYoutubeEmbed.astro';
+import PortableMapEmbed from '../../components/portable-text/PortableMapEmbed.astro';
+import PortableWorldMapHighlights from '../../components/portable-text/PortableWorldMapHighlights.astro';
+import PortableWorldReliefMap from '../../components/portable-text/PortableWorldReliefMap.astro';
+import PortableWorldStrategicMap from '../../components/portable-text/PortableWorldStrategicMap.astro';
+import {
+  getCurriculumBySlug,
+  getPublishedCurriculumSlugs,
+} from '../../lib/content';
+import { headingId } from '../../lib/slug';
+import type { PortableTextProps, TypedObject } from 'astro-portabletext/types';
 import Alert from '../../components/Alert.astro';
 import YoutubeEmbed from '../../components/YoutubeEmbed.astro';
-import TableOfContents from '../../components/TableOfContents.astro';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('curriculum');
+  const slugs = await getPublishedCurriculumSlugs();
 
-  return entries
-    .filter((entry) => entry.data.status === 'published')
-    .map((entry) => ({
-      params: { slug: entry.slug.replace(/^\/+|\/+$/g, '') },
-      props: { entry },
-    }));
+  return slugs.map((slug) => ({
+    params: { slug },
+  }));
 }
 
-const { entry } = Astro.props;
-const { Content, headings } = await entry.render();
-const isPublic = entry.data.visibility === 'public';
+const slugParam = Astro.params.slug ?? '';
+const entry = await getCurriculumBySlug(slugParam);
 
-if (!isPublic) {
+if (!entry || entry.status !== 'published' || entry.visibility !== 'public') {
   return Astro.redirect('/');
 }
 
-const words = entry.body.split(/\s+/).length;
-const readingMinutes = Math.max(1, Math.round(words / 230));
+let headings = entry.headings.filter((heading) => heading.depth === 2);
+const readingMinutes = entry.readingMinutes;
+
+type RichTextNode = TypedObject;
+type RichTextComponents = NonNullable<PortableTextProps<RichTextNode>['components']>;
+
+const richTextComponents: RichTextComponents = {
+  block: {
+    h2: HeadingTwo,
+  },
+  type: {
+    alert: PortableAlert,
+    youtubeEmbed: PortableYoutubeEmbed,
+    mapEmbed: PortableMapEmbed,
+    worldMapHighlights: PortableWorldMapHighlights,
+    worldReliefMap: PortableWorldReliefMap,
+    worldStrategicMap: PortableWorldStrategicMap,
+  },
+};
+
+const legacyComponents = {
+  Alert,
+  YoutubeEmbed,
+};
+
+const legacyEntry = entry.legacyEntry;
+
+type LegacyEntry = NonNullable<typeof legacyEntry>;
+let LegacyContent: Awaited<ReturnType<LegacyEntry['render']>>['Content'] | undefined;
+
+if (legacyEntry) {
+  const rendered = await legacyEntry.render();
+  LegacyContent = rendered.Content;
+  headings = rendered.headings.filter((heading) => heading.depth === 2);
+}
+
+const tocHeadings = headings.map((heading, index) => ({
+  depth: heading.depth,
+  slug: heading.key ? headingId(heading.text, heading.key) : heading.slug || `section-${index + 1}`,
+  text: heading.text,
+}));
 ---
 
-<BaseLayout title={`${entry.data.title} | Field Notes Curriculum`} description={entry.data.summary}>
+<BaseLayout title={`${entry.title} | Field Notes Curriculum`} description={entry.summary}>
   <article class="mx-auto max-w-3xl rounded-2xl border border-ink-100 bg-white/80 p-6 shadow-sm md:p-8">
     <header class="mb-8 border-b border-ink-100 pb-5">
       <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Curriculum Entry</p>
-      <h1 class="mt-3 font-display text-4xl text-ink-900">{entry.data.title}</h1>
-      <p class="mt-3 text-lg text-ink-700">{entry.data.summary}</p>
+      <h1 class="mt-3 font-display text-4xl text-ink-900">{entry.title}</h1>
+      <p class="mt-3 text-lg text-ink-700">{entry.summary}</p>
       <p class="mt-3 text-xs text-ink-500">{readingMinutes} min read</p>
     </header>
 
-    <TableOfContents headings={headings} />
+    <TableOfContents headings={tocHeadings} />
 
     <div class="prose prose-ink max-w-none prose-headings:font-display prose-a:text-accent">
-      <Content components={{ Alert, YoutubeEmbed }} />
+      {LegacyContent ? (
+        <LegacyContent components={legacyComponents} />
+      ) : entry.body.length > 0 ? (
+        <PortableText value={entry.body} components={richTextComponents} />
+      ) : (
+        <p>No content available yet.</p>
+      )}
     </div>
   </article>
 </BaseLayout>

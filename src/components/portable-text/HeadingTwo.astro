@@ -1,0 +1,14 @@
+---
+import type { Block, Props as PortableTextNodeProps } from 'astro-portabletext/types';
+import { toPlainText } from 'astro-portabletext/utils';
+import { headingId } from '../../lib/slug';
+
+type Props = PortableTextNodeProps<Block>;
+
+const { node, index, isInline, ...attrs } = Astro.props;
+
+const headingText = toPlainText([node]).trim();
+const id = headingId(headingText, node._key);
+---
+
+<h2 id={id || undefined} {...attrs}><slot /></h2>

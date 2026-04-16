@@ -1,0 +1,1893 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Georgia Real Estate Explorer (Free MVP)"
+  description="Free Atlanta and Georgia area explorer with nearby groceries, assisted housing signals, demographics, employers, weather, and map context."
+>
+  <section class="max-w-3xl">
+    <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Free MVP</p>
+    <h1 class="mt-3 font-display text-4xl text-ink-900 md:text-5xl">Georgia Real Estate Explorer</h1>
+    <p class="mt-4 text-lg text-ink-700">
+      This version is intentionally free-data only. It gives strong area intelligence for Atlanta and
+      Georgia addresses: amenities, assisted housing layers, neighborhood demographics, employers,
+      weather, and a custom walkability-style access score.
+    </p>
+    <div class="mt-5 flex flex-wrap gap-2 text-xs">
+      <span class="rounded-full bg-accentSoft px-3 py-1 text-accent">No paid listing feed</span>
+      <span class="rounded-full bg-accentSoft px-3 py-1 text-accent">No scraped Zillow data</span>
+      <span class="rounded-full bg-accentSoft px-3 py-1 text-accent">Atlanta + Georgia first</span>
+    </div>
+  </section>
+
+  <section class="mt-8 rounded-2xl border border-ink-100 bg-white/75 p-5 shadow-sm">
+    <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Search Area</p>
+    <form id="ga-search-form" class="mt-4 flex flex-col gap-3 sm:flex-row">
+      <label class="sr-only" for="ga-search-input">Address, city, or ZIP</label>
+      <input
+        id="ga-search-input"
+        name="query"
+        class="w-full rounded-xl border border-ink-300 bg-paper px-4 py-2.5 text-base text-ink-900 outline-none transition focus:border-accent"
+        value="30303 Atlanta GA"
+        placeholder="Try 30303 Atlanta GA or 30030 Decatur GA"
+        autocomplete="off"
+      />
+      <button
+        id="ga-search-submit"
+        type="submit"
+        class="rounded-xl border border-accent bg-accent px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-ink-900"
+      >
+        Analyze area
+      </button>
+    </form>
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button
+        type="button"
+        class="ga-preset rounded-full border border-ink-100 bg-paper px-3 py-1.5 text-xs text-ink-700"
+        data-query="30303 Atlanta GA"
+      >
+        Downtown ATL
+      </button>
+      <button
+        type="button"
+        class="ga-preset rounded-full border border-ink-100 bg-paper px-3 py-1.5 text-xs text-ink-700"
+        data-query="30306 Atlanta GA"
+      >
+        Midtown ATL
+      </button>
+      <button
+        type="button"
+        class="ga-preset rounded-full border border-ink-100 bg-paper px-3 py-1.5 text-xs text-ink-700"
+        data-query="30030 Decatur GA"
+      >
+        Decatur
+      </button>
+      <button
+        type="button"
+        class="ga-preset rounded-full border border-ink-100 bg-paper px-3 py-1.5 text-xs text-ink-700"
+        data-query="30080 Smyrna GA"
+      >
+        Smyrna
+      </button>
+      <button
+        type="button"
+        class="ga-preset rounded-full border border-ink-100 bg-paper px-3 py-1.5 text-xs text-ink-700"
+        data-query="30144 Kennesaw GA"
+      >
+        Kennesaw
+      </button>
+    </div>
+
+    <p id="ga-status" class="mt-4 text-sm text-ink-700">Ready. Enter a Georgia address or ZIP.</p>
+    <p id="ga-warning" class="mt-1 text-xs text-warning"></p>
+  </section>
+
+  <section class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <article class="rounded-xl border border-ink-100 bg-white/80 p-4 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.14em] text-ink-500">Location</p>
+      <p id="ga-location" class="mt-2 text-sm text-ink-900">-</p>
+      <p id="ga-county-tract" class="mt-2 text-xs text-ink-500">-</p>
+    </article>
+    <article class="rounded-xl border border-ink-100 bg-white/80 p-4 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.14em] text-ink-500">Median Home Value</p>
+      <p id="ga-home-value" class="mt-2 text-2xl font-display text-ink-900">-</p>
+      <p class="mt-1 text-xs text-ink-500">ACS tract estimate</p>
+    </article>
+    <article class="rounded-xl border border-ink-100 bg-white/80 p-4 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.14em] text-ink-500">Median Income</p>
+      <p id="ga-income" class="mt-2 text-2xl font-display text-ink-900">-</p>
+      <p class="mt-1 text-xs text-ink-500">ACS household estimate</p>
+    </article>
+    <article class="rounded-xl border border-ink-100 bg-white/80 p-4 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.14em] text-ink-500">Local Access Score</p>
+      <p id="ga-access-score" class="mt-2 text-2xl font-display text-ink-900">-</p>
+      <p class="mt-1 text-xs text-ink-500">Custom grocery/market proxy</p>
+    </article>
+  </section>
+
+  <section class="mt-8 grid gap-6 lg:grid-cols-[1.35fr_1fr]">
+    <article class="rounded-2xl border border-ink-100 bg-white/80 p-5 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Map Context</p>
+      <h2 class="mt-2 font-display text-2xl text-ink-900">Nearby Essentials and Housing Layers</h2>
+      <p class="mt-2 text-sm text-ink-700">
+        Blue is your search point. Green marks groceries and markets. Red marks nearby affordable
+        or assisted housing points from HUD layers.
+      </p>
+      <div id="ga-map" class="mt-4 h-[24rem] w-full rounded-xl border border-ink-100 bg-ink-50"></div>
+      <p class="mt-3 text-xs text-ink-500">Map tiles: OpenStreetMap. Layers update per search.</p>
+    </article>
+
+    <article class="rounded-2xl border border-ink-100 bg-white/80 p-5 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Nearby Food Access</p>
+      <h2 class="mt-2 font-display text-2xl text-ink-900">Groceries and Markets</h2>
+      <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+        <div class="rounded-lg border border-ink-100 bg-paper p-3">
+          <p class="m-0 text-xs uppercase tracking-[0.14em] text-ink-500">Groceries</p>
+          <p id="ga-grocery-count" class="mt-1 text-xl font-display text-ink-900">-</p>
+        </div>
+        <div class="rounded-lg border border-ink-100 bg-paper p-3">
+          <p class="m-0 text-xs uppercase tracking-[0.14em] text-ink-500">Markets</p>
+          <p id="ga-market-count" class="mt-1 text-xl font-display text-ink-900">-</p>
+        </div>
+      </div>
+      <ul id="ga-amenity-list" class="mt-4 space-y-2 text-sm text-ink-700"></ul>
+    </article>
+  </section>
+
+  <section class="mt-8 grid gap-6 lg:grid-cols-3">
+    <article class="rounded-2xl border border-ink-100 bg-white/80 p-5 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Neighborhood</p>
+      <h2 class="mt-2 font-display text-2xl text-ink-900">Demographics</h2>
+      <dl id="ga-demographics" class="mt-4 space-y-2 text-sm text-ink-700"></dl>
+    </article>
+
+    <article class="rounded-2xl border border-ink-100 bg-white/80 p-5 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Employment</p>
+      <h2 class="mt-2 font-display text-2xl text-ink-900">Top County Sectors</h2>
+      <ul id="ga-employers" class="mt-4 space-y-2 text-sm text-ink-700"></ul>
+    </article>
+
+    <article class="rounded-2xl border border-ink-100 bg-white/80 p-5 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Weather</p>
+      <h2 class="mt-2 font-display text-2xl text-ink-900">Current Conditions</h2>
+      <dl id="ga-weather" class="mt-4 space-y-2 text-sm text-ink-700"></dl>
+    </article>
+  </section>
+
+  <section class="mt-8 grid gap-6 lg:grid-cols-2">
+    <article class="rounded-2xl border border-ink-100 bg-white/80 p-5 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Assisted Housing</p>
+      <h2 class="mt-2 font-display text-2xl text-ink-900">HUD Context</h2>
+      <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+        <div class="rounded-lg border border-ink-100 bg-paper p-3">
+          <p class="m-0 text-xs uppercase tracking-[0.14em] text-ink-500">LIHTC Nearby</p>
+          <p id="ga-lihtc-count" class="mt-1 text-xl font-display text-ink-900">-</p>
+        </div>
+        <div class="rounded-lg border border-ink-100 bg-paper p-3">
+          <p class="m-0 text-xs uppercase tracking-[0.14em] text-ink-500">Public Housing</p>
+          <p id="ga-public-housing-count" class="mt-1 text-xl font-display text-ink-900">-</p>
+        </div>
+      </div>
+      <p id="ga-voucher-tract" class="mt-4 text-sm text-ink-700">-</p>
+      <ul id="ga-housing-list" class="mt-3 space-y-2 text-sm text-ink-700"></ul>
+    </article>
+
+    <article class="rounded-2xl border border-ink-100 bg-white/80 p-5 shadow-sm">
+      <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Quick Listing Jump-Off</p>
+      <h2 class="mt-2 font-display text-2xl text-ink-900">External Listing Sites</h2>
+      <p class="mt-2 text-sm text-ink-700">
+        This free MVP does not ingest MLS listing photos directly. Use these links for live listing
+        galleries, then bring the address back here for scoring and context.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2 text-sm">
+        <a
+          id="ga-zillow-link"
+          class="rounded-full border border-ink-100 bg-paper px-3 py-1.5 text-ink-700 no-underline hover:border-accent hover:text-accent"
+          href="https://www.zillow.com/homes/Atlanta,-GA_rb/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Open Zillow Search
+        </a>
+        <a
+          id="ga-google-link"
+          class="rounded-full border border-ink-100 bg-paper px-3 py-1.5 text-ink-700 no-underline hover:border-accent hover:text-accent"
+          href="https://www.google.com/maps/search/Atlanta%20GA%20homes"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Open Maps Search
+        </a>
+      </div>
+      <p class="mt-4 text-xs text-ink-500">
+        Data sources: ArcGIS Geocoding, FCC Block API, Census ACS/CBP, OpenStreetMap Overpass,
+        HUD ArcGIS layers, Open-Meteo.
+      </p>
+    </article>
+  </section>
+
+  <section class="mt-8 rounded-2xl border border-ink-100 bg-white/80 p-5 shadow-sm">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <p class="m-0 text-xs uppercase tracking-[0.18em] text-ink-500">Browse Specific Properties</p>
+        <h2 class="mt-2 font-display text-2xl text-ink-900">Nearby Listing-Like Records</h2>
+        <p class="mt-2 max-w-3xl text-sm text-ink-700">
+          Free mode uses public tax parcel records as a browseable listing proxy. You can filter by
+          appraised value, unit count, and keywords, then jump to Zillow or Maps per address.
+        </p>
+      </div>
+      <p id="ga-listings-source" class="rounded-full bg-accentSoft px-3 py-1 text-xs text-accent">
+        Source: waiting for search
+      </p>
+    </div>
+
+    <div class="mt-4 grid gap-3 md:grid-cols-6">
+      <label class="flex flex-col gap-1 text-xs text-ink-500">
+        Min Appraised
+        <input
+          id="ga-listing-min"
+          type="number"
+          min="0"
+          step="1000"
+          class="rounded-lg border border-ink-200 bg-paper px-3 py-2 text-sm text-ink-900"
+          placeholder="150000"
+        />
+      </label>
+
+      <label class="flex flex-col gap-1 text-xs text-ink-500">
+        Max Appraised
+        <input
+          id="ga-listing-max"
+          type="number"
+          min="0"
+          step="1000"
+          class="rounded-lg border border-ink-200 bg-paper px-3 py-2 text-sm text-ink-900"
+          placeholder="900000"
+        />
+      </label>
+
+      <label class="flex flex-col gap-1 text-xs text-ink-500">
+        Min Units
+        <input
+          id="ga-listing-units"
+          type="number"
+          min="0"
+          step="1"
+          class="rounded-lg border border-ink-200 bg-paper px-3 py-2 text-sm text-ink-900"
+          placeholder="1"
+        />
+      </label>
+
+      <label class="flex flex-col gap-1 text-xs text-ink-500 md:col-span-2">
+        Address / Neighborhood
+        <input
+          id="ga-listing-text"
+          type="text"
+          class="rounded-lg border border-ink-200 bg-paper px-3 py-2 text-sm text-ink-900"
+          placeholder="Peachtree, Midtown, condo"
+        />
+      </label>
+
+      <label class="flex flex-col gap-1 text-xs text-ink-500">
+        Sort
+        <select
+          id="ga-listing-sort"
+          class="rounded-lg border border-ink-200 bg-paper px-3 py-2 text-sm text-ink-900"
+        >
+          <option value="distance-asc">Nearest first</option>
+          <option value="value-desc">Highest value</option>
+          <option value="value-asc">Lowest value</option>
+          <option value="units-desc">Most units</option>
+        </select>
+      </label>
+
+      <label class="flex items-center gap-2 self-end pb-2 text-xs text-ink-600 md:col-span-1">
+        <input
+          id="ga-listing-on-market"
+          type="checkbox"
+          class="h-4 w-4 rounded border-ink-300 text-accent focus:ring-accent"
+        />
+        On market only
+      </label>
+    </div>
+
+    <div class="mt-3 flex flex-wrap items-center gap-2">
+      <button
+        id="ga-listing-reset"
+        type="button"
+        class="rounded-full border border-ink-200 bg-paper px-3 py-1.5 text-xs text-ink-700 hover:border-accent hover:text-accent"
+      >
+        Reset filters
+      </button>
+      <p id="ga-listings-summary" class="m-0 text-xs text-ink-500">Run a search to load properties.</p>
+    </div>
+
+    <p id="ga-on-market-status" class="mt-2 text-xs text-ink-500">
+      On-market feed status: waiting for search.
+    </p>
+
+    <div id="ga-listing-list" class="mt-4 grid gap-3 md:grid-cols-2"></div>
+  </section>
+
+  <noscript>
+    <section class="mt-8 rounded-xl border border-warning/40 bg-white/80 p-4 text-sm text-warning">
+      JavaScript is required for live data queries on this page.
+    </section>
+  </noscript>
+
+  <script>
+    // @ts-nocheck
+    const publicRentcastApiKey = `${import.meta.env.PUBLIC_RENTCAST_API_KEY || ''}`.trim();
+
+    const SEARCH_RADIUS_MILES = 2;
+    const HUD_RADIUS_MILES = 3;
+    const MAP_AMENITY_LIMIT = 25;
+    const MAP_HOUSING_LIMIT = 18;
+    const PARCEL_RADIUS_MILES = 2.5;
+    const PARCEL_FETCH_LIMIT = 220;
+    const PARCEL_RENDER_LIMIT = 48;
+
+    const atlantaParcelsService = {
+      query: 'https://gis.atlantaga.gov/dpcd/rest/services/AdministrativeArea/TaxParcel/MapServer/0/query',
+      fields: {
+        address: 'SITEADDRESS',
+        value: 'TOT_APPR',
+        units: 'LIVUNITS',
+        classDescription: 'CLASSDSCRP',
+        neighborhood: 'NEIGHBORHOOD',
+        parcelId: 'PARCELID',
+        taxYear: 'TAXYEAR',
+      },
+      outFields:
+        'PARCELID,SITEADDRESS,CLASSDSCRP,TOT_APPR,LANDASSESS,IMPRASSESS,TAXYEAR,NEIGHBORHOOD,LIVUNITS,PRPRTYDSCRP,SITEZIP',
+    };
+
+    const dekalbParcelsService = {
+      query:
+        'https://services2.arcgis.com/IxVN2oUE9EYLSnPE/arcgis/rest/services/Tax_Parcels2/FeatureServer/0/query',
+      fields: {
+        address: 'SITEADDRESS',
+        value: 'TOTAPR1',
+        units: null,
+        classDescription: 'CLASSDSCRP',
+        neighborhood: 'NGHBRHDCD',
+        parcelId: 'PARCELID',
+        taxYear: 'LGLSTARTDT',
+      },
+      outFields:
+        'PARCELID,SITEADDRESS,CLASSDSCRP,USEDSCRP,TOTAPR1,LGLSTARTDT,STATUS,LANDUSE,ZONING,PRPRTYDSCRP,NGHBRHDCD',
+    };
+
+    const fultonParcelsService = {
+      query:
+        'https://services1.arcgis.com/AQDHTHDrZzfsFsB5/arcgis/rest/services/Tax_Parcels/FeatureServer/0/query',
+      fields: {
+        address: 'Address',
+        value: null,
+        units: 'LivUnits',
+        classDescription: 'ClassCode',
+        neighborhood: 'NbrHood',
+        parcelId: 'ParcelID',
+        taxYear: 'TaxYear',
+      },
+      outFields: 'ParcelID,Address,TaxYear,ClassCode,LUCode,LivUnits,NbrHood,Owner',
+    };
+
+    const cobbParcelsService = {
+      query:
+        'https://services2.arcgis.com/hE9igMm8RoNeQRbh/arcgis/rest/services/Cobb_Parcels/FeatureServer/0/query',
+      fields: {
+        address: 'FULL_ADDR',
+        value: null,
+        units: null,
+        classDescription: 'Municipality',
+        neighborhood: 'Municipality',
+        parcelId: 'PIN',
+        taxYear: null,
+      },
+      outFields: 'PIN,FULL_ADDR,Municipality,ADDR,STNAME,SUFF,PREDIREC,POSTDIREC',
+    };
+
+    const gwinnettParcelsService = {
+      query:
+        'https://services3.arcgis.com/RfpmnkSAQleRbndX/arcgis/rest/services/Property_and_Tax/FeatureServer/0/query',
+      fields: {
+        address: 'ADDRESS',
+        value: null,
+        units: null,
+        classDescription: 'PARCELTYPE',
+        neighborhood: null,
+        parcelId: 'PIN',
+        taxYear: null,
+      },
+      outFields: 'PIN,ADDRESS,PARCELTYPE,LOT,TAXPIN,LRSN',
+    };
+
+    const geocoderEndpoint =
+      'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
+    const fccBlockEndpoint = 'https://geo.fcc.gov/api/census/block/find';
+    const acsEndpoint = 'https://api.census.gov/data/2023/acs/acs5';
+    const cbpEndpoint = 'https://api.census.gov/data/2023/cbp';
+    const overpassEndpoints = [
+      'https://overpass.kumi.systems/api/interpreter',
+      'https://overpass-api.de/api/interpreter',
+      'https://lz4.overpass-api.de/api/interpreter',
+    ];
+    const weatherEndpoint = 'https://api.open-meteo.com/v1/forecast';
+
+    const hudServices = {
+      vouchers:
+        'https://services.arcgis.com/VTyQ9soqVukalItT/arcgis/rest/services/Housing_Choice_Vouchers_by_Tract/FeatureServer/0/query',
+      lihtc: 'https://services.arcgis.com/VTyQ9soqVukalItT/arcgis/rest/services/LIHTC/FeatureServer/0/query',
+      publicHousing:
+        'https://services.arcgis.com/VTyQ9soqVukalItT/arcgis/rest/services/Public_Housing_Developments/FeatureServer/0/query',
+    };
+
+    const formatInteger = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+    const formatCurrency = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    });
+
+    const elements = {
+      form: document.getElementById('ga-search-form'),
+      input: document.getElementById('ga-search-input'),
+      submit: document.getElementById('ga-search-submit'),
+      status: document.getElementById('ga-status'),
+      warning: document.getElementById('ga-warning'),
+      location: document.getElementById('ga-location'),
+      countyTract: document.getElementById('ga-county-tract'),
+      homeValue: document.getElementById('ga-home-value'),
+      income: document.getElementById('ga-income'),
+      accessScore: document.getElementById('ga-access-score'),
+      groceryCount: document.getElementById('ga-grocery-count'),
+      marketCount: document.getElementById('ga-market-count'),
+      amenityList: document.getElementById('ga-amenity-list'),
+      demographics: document.getElementById('ga-demographics'),
+      employers: document.getElementById('ga-employers'),
+      weather: document.getElementById('ga-weather'),
+      lihtcCount: document.getElementById('ga-lihtc-count'),
+      publicHousingCount: document.getElementById('ga-public-housing-count'),
+      voucherTract: document.getElementById('ga-voucher-tract'),
+      housingList: document.getElementById('ga-housing-list'),
+      zillowLink: document.getElementById('ga-zillow-link'),
+      googleLink: document.getElementById('ga-google-link'),
+      map: document.getElementById('ga-map'),
+      listingsSource: document.getElementById('ga-listings-source'),
+      listingsSummary: document.getElementById('ga-listings-summary'),
+      listingList: document.getElementById('ga-listing-list'),
+      listingMin: document.getElementById('ga-listing-min'),
+      listingMax: document.getElementById('ga-listing-max'),
+      listingUnits: document.getElementById('ga-listing-units'),
+      listingText: document.getElementById('ga-listing-text'),
+      listingSort: document.getElementById('ga-listing-sort'),
+      listingOnMarket: document.getElementById('ga-listing-on-market'),
+      listingReset: document.getElementById('ga-listing-reset'),
+      onMarketStatus: document.getElementById('ga-on-market-status'),
+      presets: Array.from(document.querySelectorAll('.ga-preset')),
+    };
+
+    const listingState = {
+      records: [],
+      filtered: [],
+      sourceLabel: 'waiting for search',
+      center: null,
+      onMarketByAddress: new Set(),
+      onMarketEnabled: false,
+    };
+
+    const mapState = {
+      loading: null,
+      L: null,
+      map: null,
+      layer: null,
+    };
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function toNumber(value) {
+      if (value === null || value === undefined) {
+        return null;
+      }
+
+      if (typeof value === 'string' && value.trim() === '') {
+        return null;
+      }
+
+      const parsed = Number(value);
+      if (!Number.isFinite(parsed) || parsed < 0) {
+        return null;
+      }
+
+      return parsed;
+    }
+
+    function formatNumber(value) {
+      if (value === null || value === undefined) {
+        return 'N/A';
+      }
+
+      return formatInteger.format(value);
+    }
+
+    function formatMoney(value) {
+      if (value === null || value === undefined) {
+        return 'N/A';
+      }
+
+      return formatCurrency.format(value);
+    }
+
+    function formatPercent(value) {
+      if (value === null || value === undefined) {
+        return 'N/A';
+      }
+
+      return `${(value * 100).toFixed(1)}%`;
+    }
+
+    function formatMiles(value) {
+      if (!Number.isFinite(value)) {
+        return 'N/A';
+      }
+
+      return `${value.toFixed(2)} mi`;
+    }
+
+    function setStatus(message, tone = 'neutral') {
+      elements.status.textContent = message;
+      elements.status.className = 'mt-4 text-sm';
+
+      if (tone === 'error') {
+        elements.status.classList.add('text-red-700');
+        return;
+      }
+
+      if (tone === 'success') {
+        elements.status.classList.add('text-success');
+        return;
+      }
+
+      elements.status.classList.add('text-ink-700');
+    }
+
+    const warningMessages = new Set();
+
+    function renderWarnings() {
+      elements.warning.textContent = Array.from(warningMessages).join(' ');
+    }
+
+    function setWarning(message = '') {
+      warningMessages.clear();
+      if (String(message || '').trim()) {
+        warningMessages.add(String(message).trim());
+      }
+      renderWarnings();
+    }
+
+    function addWarning(message = '') {
+      if (!String(message || '').trim()) {
+        return;
+      }
+
+      warningMessages.add(String(message).trim());
+      renderWarnings();
+    }
+
+    function haversineMiles(lat1, lon1, lat2, lon2) {
+      const toRad = (value) => (value * Math.PI) / 180;
+      const earthRadiusMiles = 3958.8;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) *
+          Math.cos(toRad(lat2)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return earthRadiusMiles * c;
+    }
+
+    async function fetchJson(url, timeoutMs = 30000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          mode: 'cors',
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed (${response.status})`);
+        }
+
+        return await response.json();
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function fetchJsonWithRetry(url, options = {}) {
+      const {
+        attempts = 3,
+        timeoutMs = 30000,
+        retryStatuses = [429, 500, 502, 503, 504],
+        initialDelayMs = 400,
+      } = options;
+
+      let lastError = null;
+
+      for (let attempt = 1; attempt <= attempts; attempt += 1) {
+        try {
+          return await fetchJson(url, timeoutMs);
+        } catch (error) {
+          lastError = error;
+          const message = error instanceof Error ? error.message : String(error);
+          const statusMatch = message.match(/\((\d+)\)/);
+          const statusCode = statusMatch ? Number(statusMatch[1]) : null;
+          const isAbort = message.toLowerCase().includes('abort');
+          const isRetriable =
+            isAbort || (statusCode !== null && retryStatuses.includes(statusCode));
+
+          if (!isRetriable || attempt === attempts) {
+            break;
+          }
+
+          const delay = initialDelayMs * Math.pow(2, attempt - 1);
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
+
+      throw lastError;
+    }
+
+    async function geocode(query) {
+      const params = new URLSearchParams({
+        SingleLine: query,
+        f: 'pjson',
+        maxLocations: '1',
+        outFields: 'Match_addr,Addr_type,City,Region,Postal',
+      });
+
+      const data = await fetchJson(`${geocoderEndpoint}?${params.toString()}`);
+      const candidate = Array.isArray(data.candidates) ? data.candidates[0] : null;
+
+      if (!candidate || !candidate.location) {
+        throw new Error('No geocoding match found for that query.');
+      }
+
+      return {
+        label: candidate.address || query,
+        latitude: candidate.location.y,
+        longitude: candidate.location.x,
+        region: candidate.attributes?.Region || '',
+        city: candidate.attributes?.City || '',
+      };
+    }
+
+    async function getFips(latitude, longitude) {
+      const params = new URLSearchParams({
+        latitude: latitude.toFixed(6),
+        longitude: longitude.toFixed(6),
+        format: 'json',
+      });
+
+      const data = await fetchJson(`${fccBlockEndpoint}?${params.toString()}`);
+      const blockFips = data?.Block?.FIPS;
+
+      if (typeof blockFips !== 'string' || blockFips.length !== 15) {
+        throw new Error('Unable to determine census tract for this location.');
+      }
+
+      const state = blockFips.slice(0, 2);
+      const county = blockFips.slice(2, 5);
+      const tract = blockFips.slice(5, 11);
+
+      return {
+        blockFips,
+        state,
+        county,
+        tract,
+        tractGeoid: `${state}${county}${tract}`,
+        countyName: data?.County?.name || 'Unknown County',
+      };
+    }
+
+    async function getAcsData(geo) {
+      const variables = [
+        'NAME',
+        'B01003_001E',
+        'B19013_001E',
+        'B25077_001E',
+        'B25064_001E',
+        'B25002_001E',
+        'B25002_002E',
+        'B15003_001E',
+        'B15003_022E',
+        'B15003_023E',
+        'B15003_024E',
+        'B15003_025E',
+      ];
+
+      const params = new URLSearchParams({
+        get: variables.join(','),
+        for: `tract:${geo.tract}`,
+        in: `state:${geo.state} county:${geo.county}`,
+      });
+
+      const rows = await fetchJson(`${acsEndpoint}?${params.toString()}`);
+      if (!Array.isArray(rows) || rows.length < 2) {
+        return null;
+      }
+
+      const headers = rows[0];
+      const values = rows[1];
+      const record = {};
+
+      headers.forEach((header, index) => {
+        record[header] = values[index];
+      });
+
+      const educationTotal = toNumber(record.B15003_001E);
+      const bachelorPlus =
+        (toNumber(record.B15003_022E) || 0) +
+        (toNumber(record.B15003_023E) || 0) +
+        (toNumber(record.B15003_024E) || 0) +
+        (toNumber(record.B15003_025E) || 0);
+
+      const occupiedUnits = toNumber(record.B25002_002E);
+      const housingUnits = toNumber(record.B25002_001E);
+
+      return {
+        name: record.NAME || 'Unknown tract',
+        population: toNumber(record.B01003_001E),
+        medianIncome: toNumber(record.B19013_001E),
+        medianHomeValue: toNumber(record.B25077_001E),
+        medianRent: toNumber(record.B25064_001E),
+        housingUnits,
+        occupiedUnits,
+        occupancyRate:
+          housingUnits && occupiedUnits !== null && housingUnits > 0
+            ? occupiedUnits / housingUnits
+            : null,
+        bachelorPlusRate:
+          educationTotal && educationTotal > 0 ? bachelorPlus / educationTotal : null,
+      };
+    }
+
+    async function getCountyEmployment(geo) {
+      const params = new URLSearchParams({
+        get: 'NAICS2017,NAICS2017_LABEL,ESTAB,EMP',
+        for: `county:${geo.county}`,
+        in: `state:${geo.state}`,
+      });
+
+      const rows = await fetchJson(`${cbpEndpoint}?${params.toString()}`);
+      if (!Array.isArray(rows) || rows.length < 2) {
+        return [];
+      }
+
+      const headers = rows[0];
+      const entries = rows
+        .slice(1)
+        .map((row) => {
+          const item = {};
+          headers.forEach((header, index) => {
+            item[header] = row[index];
+          });
+          return item;
+        })
+        .filter((item) => /^\d{2}$/.test(item.NAICS2017 || '') && item.NAICS2017 !== '00')
+        .map((item) => ({
+          code: item.NAICS2017,
+          label: item.NAICS2017_LABEL || 'Unknown sector',
+          establishments: toNumber(item.ESTAB),
+          employment: toNumber(item.EMP),
+        }))
+        .filter((item) => item.employment !== null)
+        .sort((a, b) => (b.employment || 0) - (a.employment || 0));
+
+      return entries.slice(0, 8);
+    }
+
+    async function getAmenities(latitude, longitude) {
+      const radiusMeters = Math.round(SEARCH_RADIUS_MILES * 1609.34);
+      let data = null;
+      let lastError = null;
+
+      const fullQuery = `[out:json][timeout:25];(nwr(around:${radiusMeters},${latitude},${longitude})[shop=supermarket];nwr(around:${radiusMeters},${latitude},${longitude})[shop=grocery];nwr(around:${radiusMeters},${latitude},${longitude})[amenity=marketplace];);out center tags;`;
+      const lightQuery = `[out:json][timeout:15];(node(around:${radiusMeters},${latitude},${longitude})[shop=supermarket];node(around:${radiusMeters},${latitude},${longitude})[shop=grocery];node(around:${radiusMeters},${latitude},${longitude})[amenity=marketplace];);out tags;`;
+
+      for (const query of [fullQuery, lightQuery]) {
+        const params = new URLSearchParams({ data: query });
+
+        for (const endpoint of overpassEndpoints) {
+          try {
+            data = await fetchJsonWithRetry(`${endpoint}?${params.toString()}`, {
+              attempts: 1,
+              timeoutMs: 35000,
+            });
+            break;
+          } catch (error) {
+            lastError = error;
+          }
+        }
+
+        if (data) {
+          break;
+        }
+      }
+
+      if (!data) {
+        throw lastError || new Error('Amenities source is temporarily unavailable.');
+      }
+
+      const seen = new Set();
+      const items = [];
+
+      for (const element of Array.isArray(data.elements) ? data.elements : []) {
+        const lat = element.lat ?? element.center?.lat;
+        const lon = element.lon ?? element.center?.lon;
+        const tags = element.tags || {};
+
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+          continue;
+        }
+
+        let kind = 'Other';
+        if (tags.shop === 'supermarket' || tags.shop === 'grocery') {
+          kind = 'Grocery';
+        } else if (tags.amenity === 'marketplace') {
+          kind = 'Market';
+        }
+
+        const name = tags.name || `${kind} point`;
+        const key = `${name}|${kind}|${lat.toFixed(5)}|${lon.toFixed(5)}`;
+        if (seen.has(key)) {
+          continue;
+        }
+
+        seen.add(key);
+
+        items.push({
+          id: element.id,
+          kind,
+          name,
+          latitude: lat,
+          longitude: lon,
+          distanceMiles: haversineMiles(latitude, longitude, lat, lon),
+        });
+      }
+
+      return items.sort((a, b) => a.distanceMiles - b.distanceMiles);
+    }
+
+    async function getHudVouchersByTract(tractGeoid) {
+      const params = new URLSearchParams({
+        where: `GEOID='${tractGeoid}'`,
+        outFields: 'GEOID,HCV_PUBLIC,HCV_PUBLIC_PCT',
+        returnGeometry: 'false',
+        f: 'json',
+      });
+
+      const data = await fetchJson(`${hudServices.vouchers}?${params.toString()}`);
+      const feature = Array.isArray(data.features) ? data.features[0] : null;
+      if (!feature || !feature.attributes) {
+        return null;
+      }
+
+      return {
+        vouchers: toNumber(feature.attributes.HCV_PUBLIC),
+        voucherPct: toNumber(feature.attributes.HCV_PUBLIC_PCT),
+      };
+    }
+
+    async function getHudNearby(serviceUrl, outFields, latitude, longitude, radiusMiles, limit = 30) {
+      const params = new URLSearchParams({
+        where: '1=1',
+        outFields,
+        returnGeometry: 'true',
+        geometry: JSON.stringify({
+          x: longitude,
+          y: latitude,
+          spatialReference: { wkid: 4326 },
+        }),
+        geometryType: 'esriGeometryPoint',
+        inSR: '4326',
+        spatialRel: 'esriSpatialRelIntersects',
+        distance: String(radiusMiles),
+        units: 'esriSRUnit_StatuteMile',
+        outSR: '4326',
+        resultRecordCount: String(limit),
+        f: 'json',
+      });
+
+      const data = await fetchJson(`${serviceUrl}?${params.toString()}`);
+      const features = Array.isArray(data.features) ? data.features : [];
+
+      return features
+        .map((feature) => {
+          const attrs = feature.attributes || {};
+          const lat = feature.geometry?.y;
+          const lon = feature.geometry?.x;
+          if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+            return null;
+          }
+
+          return {
+            attributes: attrs,
+            latitude: lat,
+            longitude: lon,
+            distanceMiles: haversineMiles(latitude, longitude, lat, lon),
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.distanceMiles - b.distanceMiles);
+    }
+
+    async function getWeather(latitude, longitude) {
+      const params = new URLSearchParams({
+        latitude: latitude.toFixed(5),
+        longitude: longitude.toFixed(5),
+        timezone: 'auto',
+        temperature_unit: 'fahrenheit',
+        wind_speed_unit: 'mph',
+        precipitation_unit: 'inch',
+        current:
+          'temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,wind_speed_10m',
+        daily: 'temperature_2m_max,temperature_2m_min,precipitation_sum',
+        forecast_days: '3',
+      });
+
+      const data = await fetchJson(`${weatherEndpoint}?${params.toString()}`);
+      return {
+        current: data.current || null,
+        currentUnits: data.current_units || null,
+        daily: data.daily || null,
+        dailyUnits: data.daily_units || null,
+      };
+    }
+
+    function computeAccessScore(amenities) {
+      const groceries = amenities.filter((item) => item.kind === 'Grocery');
+      const markets = amenities.filter((item) => item.kind === 'Market');
+
+      const nearestGrocery = groceries[0]?.distanceMiles ?? SEARCH_RADIUS_MILES;
+      const nearestMarket = markets[0]?.distanceMiles ?? SEARCH_RADIUS_MILES;
+      const groceriesWithinMile = groceries.filter((item) => item.distanceMiles <= 1).length;
+      const marketsWithinTwoMiles = markets.filter((item) => item.distanceMiles <= 2).length;
+
+      const rawScore =
+        100 -
+        nearestGrocery * 28 -
+        nearestMarket * 16 +
+        groceriesWithinMile * 9 +
+        marketsWithinTwoMiles * 7;
+
+      return {
+        score: clamp(Math.round(rawScore), 0, 100),
+        groceryCount: groceries.length,
+        marketCount: markets.length,
+      };
+    }
+
+    function renderDefinitionList(target, rows) {
+      target.innerHTML = '';
+      for (const row of rows) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex items-start justify-between gap-3 border-b border-ink-100 pb-2';
+
+        const key = document.createElement('dt');
+        key.className = 'text-ink-500';
+        key.textContent = row.label;
+
+        const value = document.createElement('dd');
+        value.className = 'm-0 text-right text-ink-900';
+        value.textContent = row.value;
+
+        wrapper.appendChild(key);
+        wrapper.appendChild(value);
+        target.appendChild(wrapper);
+      }
+    }
+
+    function renderList(target, items, emptyMessage) {
+      target.innerHTML = '';
+
+      if (!items || items.length === 0) {
+        const li = document.createElement('li');
+        li.className = 'rounded-lg border border-ink-100 bg-paper p-2 text-ink-500';
+        li.textContent = emptyMessage;
+        target.appendChild(li);
+        return;
+      }
+
+      for (const item of items) {
+        const li = document.createElement('li');
+        li.className = 'rounded-lg border border-ink-100 bg-paper p-2';
+        li.textContent = item;
+        target.appendChild(li);
+      }
+    }
+
+    function getParcelServiceForLocation(location, fips) {
+      const region = (location.region || '').toLowerCase();
+      if (!['georgia', 'ga'].includes(region)) {
+        return {
+          service: atlantaParcelsService,
+          label: 'City of Atlanta tax parcels (fallback outside GA)',
+          quality: 'fallback',
+        };
+      }
+
+      if (fips.county === '121') {
+        return {
+          service: fultonParcelsService,
+          label: 'Fulton County tax parcels',
+          quality: 'county',
+        };
+      }
+
+      if (fips.county === '089') {
+        return {
+          service: dekalbParcelsService,
+          label: 'DeKalb County tax parcels',
+          quality: 'county',
+        };
+      }
+
+      if (fips.county === '067') {
+        return {
+          service: cobbParcelsService,
+          label: 'Cobb County parcel records',
+          quality: 'county',
+        };
+      }
+
+      if (fips.county === '135') {
+        return {
+          service: gwinnettParcelsService,
+          label: 'Gwinnett County parcel records',
+          quality: 'county',
+        };
+      }
+
+      return {
+        service: atlantaParcelsService,
+        label: 'City of Atlanta tax parcels (proxy fallback)',
+        quality: 'fallback',
+      };
+    }
+
+    function extractCentroidFromPolygonGeometry(geometry) {
+      const rings = Array.isArray(geometry?.rings) ? geometry.rings : [];
+      let sumX = 0;
+      let sumY = 0;
+      let count = 0;
+
+      for (const ring of rings) {
+        if (!Array.isArray(ring)) {
+          continue;
+        }
+
+        for (const coordinate of ring) {
+          const x = coordinate?.[0];
+          const y = coordinate?.[1];
+          if (!Number.isFinite(x) || !Number.isFinite(y)) {
+            continue;
+          }
+
+          sumX += x;
+          sumY += y;
+          count += 1;
+        }
+      }
+
+      if (count === 0) {
+        return null;
+      }
+
+      return {
+        longitude: sumX / count,
+        latitude: sumY / count,
+      };
+    }
+
+    function parseTaxYear(rawValue) {
+      const numeric = Number(rawValue);
+      if (Number.isFinite(numeric) && numeric > 1900 && numeric < 2100) {
+        return Math.round(numeric);
+      }
+
+      const text = String(rawValue || '');
+      const match = text.match(/(19|20)\d{2}/);
+      if (!match) {
+        return null;
+      }
+
+      return Number(match[0]);
+    }
+
+    async function fetchParcelRecords(location, fips) {
+      const selected = getParcelServiceForLocation(location, fips);
+      const service = selected.service;
+
+      const params = new URLSearchParams({
+        where: '1=1',
+        outFields: service.outFields,
+        returnGeometry: 'true',
+        geometry: JSON.stringify({
+          x: location.longitude,
+          y: location.latitude,
+          spatialReference: { wkid: 4326 },
+        }),
+        geometryType: 'esriGeometryPoint',
+        inSR: '4326',
+        spatialRel: 'esriSpatialRelIntersects',
+        distance: String(PARCEL_RADIUS_MILES),
+        units: 'esriSRUnit_StatuteMile',
+        outSR: '4326',
+        resultRecordCount: String(PARCEL_FETCH_LIMIT),
+        f: 'json',
+      });
+
+      const data = await fetchJson(`${service.query}?${params.toString()}`, 45000);
+      const features = Array.isArray(data.features) ? data.features : [];
+      const records = [];
+
+      for (const feature of features) {
+        const attributes = feature.attributes || {};
+        const serviceAddressField = service.fields.address;
+        const addressRaw = serviceAddressField ? attributes[serviceAddressField] : null;
+        const address = String(addressRaw || '').trim();
+
+        const centroid = extractCentroidFromPolygonGeometry(feature.geometry);
+        if (!centroid) {
+          continue;
+        }
+
+        const appraisedValue = service.fields.value
+          ? toNumber(attributes[service.fields.value])
+          : null;
+        const units = service.fields.units ? toNumber(attributes[service.fields.units]) : null;
+        const classLabel = service.fields.classDescription
+          ? String(attributes[service.fields.classDescription] || '').trim()
+          : '';
+        const neighborhood = service.fields.neighborhood
+          ? String(attributes[service.fields.neighborhood] || '').trim()
+          : '';
+        const parcelId = service.fields.parcelId
+          ? String(attributes[service.fields.parcelId] || '').trim()
+          : '';
+        const taxYear = service.fields.taxYear ? parseTaxYear(attributes[service.fields.taxYear]) : null;
+
+        const landAssessed = toNumber(attributes.LANDASSESS);
+        const improvementAssessed = toNumber(attributes.IMPRASSESS);
+        const combinedAssessed =
+          landAssessed !== null && improvementAssessed !== null
+            ? landAssessed + improvementAssessed
+            : null;
+
+        const derivedValue = appraisedValue ?? combinedAssessed;
+
+        const normalizedAddress = address || `${parcelId || 'Parcel'} (${centroid.latitude.toFixed(5)}, ${centroid.longitude.toFixed(5)})`;
+
+        records.push({
+          address: normalizedAddress,
+          parcelId,
+          classLabel,
+          neighborhood,
+          appraisedValue: Number.isFinite(derivedValue) ? derivedValue : null,
+          units,
+          taxYear,
+          latitude: centroid.latitude,
+          longitude: centroid.longitude,
+          distanceMiles: haversineMiles(
+            location.latitude,
+            location.longitude,
+            centroid.latitude,
+            centroid.longitude
+          ),
+          source: selected.label,
+          sourceQuality: selected.quality,
+        });
+      }
+
+      records.sort((a, b) => a.distanceMiles - b.distanceMiles);
+
+      return {
+        records,
+        sourceLabel: selected.label,
+        sourceQuality: selected.quality,
+      };
+    }
+
+    function normalizeAddressForMatching(value) {
+      return String(value || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    async function fetchOnMarketAddressSet(location) {
+      const apiKey = `${publicRentcastApiKey || ''}`.trim();
+      if (!apiKey) {
+        return { enabled: false, addresses: new Set(), reason: 'missing-key', detail: null };
+      }
+
+      const city = (location.city || '').trim();
+      const state = (location.region || '').trim();
+      if (!city || !state) {
+        return { enabled: false, addresses: new Set(), reason: 'missing-city-state', detail: null };
+      }
+
+      const params = new URLSearchParams({
+        city,
+        state,
+        status: 'active',
+        limit: '500',
+      });
+
+      const url = `https://api.rentcast.io/v1/listings/sale?${params.toString()}`;
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 30000);
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          mode: 'cors',
+          signal: controller.signal,
+          headers: {
+            'X-Api-Key': apiKey,
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Rentcast listings request failed (${response.status}): ${errorText.slice(0, 120)}`);
+        }
+
+        const rows = await response.json();
+        const addressSet = new Set();
+
+        if (Array.isArray(rows)) {
+          for (const row of rows) {
+            const candidateAddress =
+              row?.formattedAddress ||
+              row?.addressLine1 ||
+              row?.address ||
+              row?.property?.formattedAddress ||
+              row?.property?.addressLine1 ||
+              row?.propertyAddress;
+
+            const normalized = normalizeAddressForMatching(candidateAddress);
+            if (normalized) {
+              addressSet.add(normalized);
+            }
+          }
+        }
+
+        return { enabled: true, addresses: addressSet, reason: null, detail: `Matched against ${addressSet.size} active listing addresses for ${city}, ${state}.` };
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function updateOnMarketStatus(text, tone = 'neutral') {
+      if (!elements.onMarketStatus) {
+        return;
+      }
+
+      elements.onMarketStatus.textContent = text;
+      elements.onMarketStatus.className = 'mt-2 text-xs';
+      if (tone === 'error') {
+        elements.onMarketStatus.classList.add('text-warning');
+      } else if (tone === 'success') {
+        elements.onMarketStatus.classList.add('text-success');
+      } else {
+        elements.onMarketStatus.classList.add('text-ink-500');
+      }
+    }
+
+    function readListingFilters() {
+      return {
+        minValue: toNumber(elements.listingMin?.value),
+        maxValue: toNumber(elements.listingMax?.value),
+        minUnits: toNumber(elements.listingUnits?.value),
+        text: String(elements.listingText?.value || '').trim().toLowerCase(),
+        sort: elements.listingSort?.value || 'distance-asc',
+        onMarketOnly: Boolean(elements.listingOnMarket?.checked),
+      };
+    }
+
+    function applyListingFilters() {
+      const filters = readListingFilters();
+      let filtered = [...listingState.records];
+
+      filtered = filtered.filter((record) => {
+        if (filters.minValue !== null) {
+          if (record.appraisedValue === null || record.appraisedValue < filters.minValue) {
+            return false;
+          }
+        }
+
+        if (filters.maxValue !== null) {
+          if (record.appraisedValue === null || record.appraisedValue > filters.maxValue) {
+            return false;
+          }
+        }
+
+        if (filters.minUnits !== null) {
+          if (record.units === null || record.units < filters.minUnits) {
+            return false;
+          }
+        }
+
+        if (filters.text) {
+          const haystack = `${record.address} ${record.neighborhood} ${record.classLabel} ${record.parcelId}`.toLowerCase();
+          if (!haystack.includes(filters.text)) {
+            return false;
+          }
+        }
+
+        if (filters.onMarketOnly) {
+          if (!record.isOnMarket) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      if (filters.sort === 'value-desc') {
+        filtered.sort((a, b) => (b.appraisedValue || -1) - (a.appraisedValue || -1));
+      } else if (filters.sort === 'value-asc') {
+        filtered.sort((a, b) => (a.appraisedValue || Number.MAX_SAFE_INTEGER) - (b.appraisedValue || Number.MAX_SAFE_INTEGER));
+      } else if (filters.sort === 'units-desc') {
+        filtered.sort((a, b) => (b.units || -1) - (a.units || -1));
+      } else {
+        filtered.sort((a, b) => a.distanceMiles - b.distanceMiles);
+      }
+
+      listingState.filtered = filtered;
+      renderListingCards();
+    }
+
+    function renderListingCards() {
+      const sourceBadge = listingState.sourceLabel || 'waiting for search';
+      elements.listingsSource.textContent = `Source: ${sourceBadge}`;
+
+      if (elements.listingOnMarket) {
+        elements.listingOnMarket.disabled = !listingState.onMarketEnabled;
+        elements.listingOnMarket.title = listingState.onMarketEnabled
+          ? 'Show only listings currently marked active in listing feed.'
+          : 'Set PUBLIC_RENTCAST_API_KEY to enable on-market filter.';
+      }
+
+      elements.listingList.innerHTML = '';
+      const total = listingState.records.length;
+      const filteredCount = listingState.filtered.length;
+      const shown = Math.min(filteredCount, PARCEL_RENDER_LIMIT);
+
+      if (total === 0) {
+        elements.listingsSummary.textContent =
+          'No parcel records available here yet. Try another nearby Georgia address.';
+        const empty = document.createElement('article');
+        empty.className = 'rounded-xl border border-ink-100 bg-paper p-4 text-sm text-ink-500';
+        empty.textContent = 'No property records found for this search area.';
+        elements.listingList.appendChild(empty);
+        return;
+      }
+
+      if (filteredCount === 0) {
+        elements.listingsSummary.textContent =
+          `0 matches for current filters (${total} loaded). Clear filters to see listings.`;
+        const emptyFiltered = document.createElement('article');
+        emptyFiltered.className = 'rounded-xl border border-ink-100 bg-paper p-4 text-sm text-ink-500';
+        emptyFiltered.textContent =
+          'No properties match the active filters. Try removing min/max/unit/text filters.';
+        elements.listingList.appendChild(emptyFiltered);
+        return;
+      }
+
+      elements.listingsSummary.textContent = `Showing ${shown} of ${listingState.filtered.length} filtered records (${total} loaded).`;
+
+      for (const record of listingState.filtered.slice(0, PARCEL_RENDER_LIMIT)) {
+        const card = document.createElement('article');
+        card.className = 'rounded-xl border border-ink-100 bg-white p-4 shadow-sm';
+
+        const address = document.createElement('h3');
+        address.className = 'm-0 font-display text-xl text-ink-900';
+        address.textContent = record.address;
+        card.appendChild(address);
+
+        const meta = document.createElement('p');
+        meta.className = 'mt-1 text-xs text-ink-500';
+        meta.textContent = `${record.neighborhood || 'Area N/A'} | ${record.classLabel || 'Class N/A'} | ${formatMiles(record.distanceMiles)} | ${record.isOnMarket ? 'On market' : 'Not verified on market'}`;
+        card.appendChild(meta);
+
+        const stats = document.createElement('div');
+        stats.className = 'mt-3 grid grid-cols-2 gap-2 text-xs';
+
+        const fields = [
+          { label: 'Appraised', value: formatMoney(record.appraisedValue) },
+          { label: 'Units', value: formatNumber(record.units) },
+          { label: 'Market', value: record.isOnMarket ? 'Active' : 'Unknown' },
+          { label: 'Tax Year', value: record.taxYear ? String(record.taxYear) : 'N/A' },
+          { label: 'Parcel ID', value: record.parcelId || 'N/A' },
+        ];
+
+        for (const field of fields) {
+          const box = document.createElement('div');
+          box.className = 'rounded-lg border border-ink-100 bg-paper p-2';
+
+          const key = document.createElement('p');
+          key.className = 'm-0 text-[10px] uppercase tracking-[0.12em] text-ink-500';
+          key.textContent = field.label;
+
+          const value = document.createElement('p');
+          value.className = 'mt-1 mb-0 text-sm text-ink-900';
+          value.textContent = field.value;
+
+          box.appendChild(key);
+          box.appendChild(value);
+          stats.appendChild(box);
+        }
+
+        card.appendChild(stats);
+
+        const links = document.createElement('div');
+        links.className = 'mt-3 flex flex-wrap gap-2 text-xs';
+        const encodedAddress = encodeURIComponent(record.address);
+
+        const zillow = document.createElement('a');
+        zillow.className =
+          'rounded-full border border-ink-200 bg-paper px-3 py-1 text-ink-700 no-underline hover:border-accent hover:text-accent';
+        zillow.href = `https://www.zillow.com/homes/${encodedAddress}_rb/`;
+        zillow.target = '_blank';
+        zillow.rel = 'noopener noreferrer';
+        zillow.textContent = 'Search on Zillow';
+
+        const maps = document.createElement('a');
+        maps.className =
+          'rounded-full border border-ink-200 bg-paper px-3 py-1 text-ink-700 no-underline hover:border-accent hover:text-accent';
+        maps.href = `https://www.google.com/maps/search/${encodedAddress}`;
+        maps.target = '_blank';
+        maps.rel = 'noopener noreferrer';
+        maps.textContent = 'Open in Maps';
+
+        links.appendChild(zillow);
+        links.appendChild(maps);
+        card.appendChild(links);
+
+        elements.listingList.appendChild(card);
+      }
+    }
+
+    function resetListingFilters() {
+      elements.listingMin.value = '';
+      elements.listingMax.value = '';
+      elements.listingUnits.value = '';
+      elements.listingText.value = '';
+      elements.listingSort.value = 'distance-asc';
+      if (elements.listingOnMarket) {
+        elements.listingOnMarket.checked = false;
+      }
+      applyListingFilters();
+    }
+
+    async function loadLeaflet() {
+      if (mapState.L) {
+        return mapState.L;
+      }
+
+      if (mapState.loading) {
+        return mapState.loading;
+      }
+
+      mapState.loading = new Promise((resolve, reject) => {
+        const css = document.createElement('link');
+        css.rel = 'stylesheet';
+        css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        document.head.appendChild(css);
+
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        script.async = true;
+        script.onload = () => {
+          if (window.L) {
+            mapState.L = window.L;
+            resolve(window.L);
+            return;
+          }
+
+          reject(new Error('Leaflet failed to initialize.'));
+        };
+        script.onerror = () => reject(new Error('Leaflet script could not load.'));
+        document.head.appendChild(script);
+      });
+
+      return mapState.loading;
+    }
+
+    async function updateMap(latitude, longitude, amenities, lihtcSites, publicHousingSites) {
+      const L = await loadLeaflet();
+
+      if (!mapState.map) {
+        mapState.map = L.map(elements.map, { zoomControl: true }).setView([latitude, longitude], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(mapState.map);
+
+        mapState.layer = L.layerGroup().addTo(mapState.map);
+      }
+
+      mapState.map.setView([latitude, longitude], 13);
+      mapState.layer.clearLayers();
+
+      L.circleMarker([latitude, longitude], {
+        radius: 9,
+        color: '#21557a',
+        fillColor: '#21557a',
+        fillOpacity: 0.3,
+        weight: 2,
+      })
+        .addTo(mapState.layer)
+        .bindPopup('Search location');
+
+      for (const amenity of amenities.slice(0, MAP_AMENITY_LIMIT)) {
+        const color = amenity.kind === 'Market' ? '#8a5c1f' : '#2f6a4f';
+        L.circleMarker([amenity.latitude, amenity.longitude], {
+          radius: 5,
+          color,
+          fillColor: color,
+          fillOpacity: 0.4,
+          weight: 1,
+        })
+          .addTo(mapState.layer)
+          .bindPopup(`${amenity.kind}: ${amenity.name} (${formatMiles(amenity.distanceMiles)})`);
+      }
+
+      const combinedHousing = [...lihtcSites, ...publicHousingSites].slice(0, MAP_HOUSING_LIMIT);
+      for (const housing of combinedHousing) {
+        const label = housing.label || 'HUD housing point';
+
+        L.circleMarker([housing.latitude, housing.longitude], {
+          radius: 6,
+          color: '#8f3a27',
+          fillColor: '#8f3a27',
+          fillOpacity: 0.35,
+          weight: 1,
+        })
+          .addTo(mapState.layer)
+          .bindPopup(`${label} (${formatMiles(housing.distanceMiles)})`);
+      }
+    }
+
+    function updateExternalLinks(query) {
+      const encoded = encodeURIComponent(query);
+      elements.zillowLink.href = `https://www.zillow.com/homes/${encoded}_rb/`;
+      elements.googleLink.href = `https://www.google.com/maps/search/${encoded}%20homes`;
+    }
+
+    async function runAnalysis(query) {
+      const cleaned = query.trim();
+      if (!cleaned) {
+        setStatus('Enter an address, city, or ZIP first.', 'error');
+        return;
+      }
+
+      setWarning('');
+      setStatus('Geocoding location and loading public datasets...');
+      elements.submit.disabled = true;
+      elements.submit.textContent = 'Loading...';
+      elements.listingsSummary.textContent = 'Loading parcel records for this area...';
+      updateOnMarketStatus('On-market feed status: checking key and listing feed...');
+
+      try {
+        const location = await geocode(cleaned);
+        const fips = await getFips(location.latitude, location.longitude);
+
+        if (
+          location.region &&
+          !['georgia', 'ga'].includes(location.region.toLowerCase())
+        ) {
+          addWarning(
+            'This MVP is tuned for Georgia workflows, but the free national APIs still returned results for this location.'
+          );
+        }
+
+        setStatus('Pulling core datasets (demographics, jobs, weather, housing, parcels)...');
+
+        const [acs, employment, vouchers, lihtc, publicHousing, weather, parcels] = await Promise.all([
+          getAcsData(fips),
+          getCountyEmployment(fips),
+          getHudVouchersByTract(fips.tractGeoid),
+          getHudNearby(
+            hudServices.lihtc,
+            'PROJECT,PROJ_ADD,N_UNITS,LI_UNITS,YR_PIS',
+            location.latitude,
+            location.longitude,
+            HUD_RADIUS_MILES,
+            40
+          ),
+          getHudNearby(
+            hudServices.publicHousing,
+            'PROJECT_NAME,TOTAL_UNITS,PCT_OCCUPIED,FORMAL_PARTICIPANT_NAME',
+            location.latitude,
+            location.longitude,
+            HUD_RADIUS_MILES,
+            40
+          ),
+          getWeather(location.latitude, location.longitude),
+          fetchParcelRecords(location, fips),
+        ]);
+
+        let onMarketLookup = { enabled: false, addresses: new Set(), reason: null };
+        try {
+          onMarketLookup = await fetchOnMarketAddressSet(location);
+        } catch (onMarketError) {
+          const message = onMarketError instanceof Error ? onMarketError.message : 'Unknown error';
+          console.info(`On-market lookup failed: ${message}`);
+          onMarketLookup = {
+            enabled: false,
+            addresses: new Set(),
+            reason: 'request-failed',
+            detail: message,
+          };
+        }
+
+        const normalizedAddresses = onMarketLookup.addresses;
+        const recordsWithMarketFlag = parcels.records.map((record) => {
+          const normalized = normalizeAddressForMatching(record.address);
+          const isOnMarket = normalized ? normalizedAddresses.has(normalized) : false;
+          return {
+            ...record,
+            isOnMarket,
+          };
+        });
+
+        listingState.records = recordsWithMarketFlag;
+        listingState.sourceLabel = parcels.sourceLabel;
+        listingState.center = { latitude: location.latitude, longitude: location.longitude };
+        listingState.onMarketByAddress = normalizedAddresses;
+        listingState.onMarketEnabled = onMarketLookup.enabled;
+
+        if (!onMarketLookup.enabled && elements.listingOnMarket?.checked) {
+          elements.listingOnMarket.checked = false;
+        }
+
+        if (!onMarketLookup.enabled) {
+          if (onMarketLookup.reason === 'missing-key') {
+            addWarning(
+              'On-market filter is disabled. Add PUBLIC_RENTCAST_API_KEY to enable active listing matching.'
+            );
+            updateOnMarketStatus(
+              'On-market feed status: disabled (missing PUBLIC_RENTCAST_API_KEY).',
+              'error'
+            );
+          } else if (onMarketLookup.reason === 'missing-city-state') {
+            updateOnMarketStatus(
+              'On-market feed status: disabled (geocoder did not return city/state clearly for this search).',
+              'error'
+            );
+          } else if (onMarketLookup.reason === 'request-failed') {
+            addWarning(
+              'On-market listing lookup is temporarily unavailable. Browse results are still shown.'
+            );
+            updateOnMarketStatus(
+              `On-market feed status: request failed (${onMarketLookup.detail || 'unknown error'}).`,
+              'error'
+            );
+          } else {
+            updateOnMarketStatus('On-market feed status: unavailable for this query.', 'error');
+          }
+        } else {
+          updateOnMarketStatus(
+            `On-market feed status: connected. ${onMarketLookup.detail || ''}`.trim(),
+            'success'
+          );
+        }
+
+        setStatus('Pulling nearby amenities...');
+        let amenities = [];
+        try {
+          amenities = await getAmenities(location.latitude, location.longitude);
+        } catch (amenitiesError) {
+          const details = amenitiesError instanceof Error ? amenitiesError.message : 'Unknown error';
+          console.info(`Amenities request failed: ${details}. Continuing without amenity points.`);
+          addWarning(
+            'Nearby grocery/market data is temporarily unavailable (Overpass timeout). All other sections and listings are still loaded.'
+          );
+        }
+
+        const access = computeAccessScore(amenities);
+
+        elements.location.textContent = location.label;
+        elements.countyTract.textContent = `${fips.countyName} | Tract ${fips.tractGeoid}`;
+        elements.homeValue.textContent = formatMoney(acs?.medianHomeValue ?? null);
+        elements.income.textContent = formatMoney(acs?.medianIncome ?? null);
+        elements.accessScore.textContent = `${access.score} / 100`;
+        elements.groceryCount.textContent = formatNumber(access.groceryCount);
+        elements.marketCount.textContent = formatNumber(access.marketCount);
+        elements.lihtcCount.textContent = formatNumber(lihtc.length);
+        elements.publicHousingCount.textContent = formatNumber(publicHousing.length);
+
+        renderList(
+          elements.amenityList,
+          amenities.slice(0, 10).map((item) => `${item.kind}: ${item.name} (${formatMiles(item.distanceMiles)})`),
+          'No grocery or marketplace points found in the search radius.'
+        );
+
+        renderDefinitionList(elements.demographics, [
+          { label: 'Population', value: formatNumber(acs?.population ?? null) },
+          { label: 'Median rent', value: formatMoney(acs?.medianRent ?? null) },
+          { label: 'Housing units', value: formatNumber(acs?.housingUnits ?? null) },
+          { label: 'Occupancy rate', value: formatPercent(acs?.occupancyRate ?? null) },
+          { label: 'Bachelor+ share', value: formatPercent(acs?.bachelorPlusRate ?? null) },
+        ]);
+
+        renderList(
+          elements.employers,
+          employment.map(
+            (row) =>
+              `${row.label.replace(/^\d{2}\s*/, '')}: ${formatNumber(row.employment)} jobs, ${formatNumber(row.establishments)} establishments`
+          ),
+          'Employment sector data not available for this county.'
+        );
+
+        renderDefinitionList(elements.weather, [
+          {
+            label: 'Temperature',
+            value:
+              weather?.current?.temperature_2m !== undefined
+                ? `${Math.round(weather.current.temperature_2m)}${weather.currentUnits?.temperature_2m || 'F'}`
+                : 'N/A',
+          },
+          {
+            label: 'Feels like',
+            value:
+              weather?.current?.apparent_temperature !== undefined
+                ? `${Math.round(weather.current.apparent_temperature)}${weather.currentUnits?.apparent_temperature || 'F'}`
+                : 'N/A',
+          },
+          {
+            label: 'Humidity',
+            value:
+              weather?.current?.relative_humidity_2m !== undefined
+                ? `${Math.round(weather.current.relative_humidity_2m)}%`
+                : 'N/A',
+          },
+          {
+            label: 'Wind',
+            value:
+              weather?.current?.wind_speed_10m !== undefined
+                ? `${Math.round(weather.current.wind_speed_10m)} ${weather.currentUnits?.wind_speed_10m || 'mph'}`
+                : 'N/A',
+          },
+          {
+            label: 'Today high / low',
+            value:
+              Array.isArray(weather?.daily?.temperature_2m_max) &&
+              Array.isArray(weather?.daily?.temperature_2m_min) &&
+              weather.daily.temperature_2m_max.length > 0
+                ? `${Math.round(weather.daily.temperature_2m_max[0])} / ${Math.round(weather.daily.temperature_2m_min[0])}${weather.dailyUnits?.temperature_2m_max || 'F'}`
+                : 'N/A',
+          },
+        ]);
+
+        const housingRows = [];
+
+        for (const site of lihtc.slice(0, 6)) {
+          const label = site.attributes.PROJECT || 'LIHTC site';
+          const units = toNumber(site.attributes.LI_UNITS) ?? toNumber(site.attributes.N_UNITS);
+          housingRows.push(`${label}: ${formatNumber(units)} units (${formatMiles(site.distanceMiles)})`);
+        }
+
+        for (const site of publicHousing.slice(0, 6)) {
+          const label = site.attributes.PROJECT_NAME || 'Public housing site';
+          const units = toNumber(site.attributes.TOTAL_UNITS);
+          housingRows.push(`${label}: ${formatNumber(units)} units (${formatMiles(site.distanceMiles)})`);
+        }
+
+        renderList(elements.housingList, housingRows, 'No nearby LIHTC or public housing points found.');
+
+        if (vouchers) {
+          const pct = vouchers.voucherPct !== null ? `${vouchers.voucherPct.toFixed(1)}%` : 'N/A';
+          elements.voucherTract.textContent = `Housing Choice Voucher households in tract: ${formatNumber(vouchers.vouchers)} (${pct} of renter households).`;
+        } else {
+          elements.voucherTract.textContent =
+            'Housing Choice Voucher tract aggregate not available or suppressed for confidentiality.';
+        }
+
+        await updateMap(
+          location.latitude,
+          location.longitude,
+          amenities,
+          lihtc.map((item) => ({
+            latitude: item.latitude,
+            longitude: item.longitude,
+            distanceMiles: item.distanceMiles,
+            label: item.attributes.PROJECT || 'LIHTC site',
+          })),
+          publicHousing.map((item) => ({
+            latitude: item.latitude,
+            longitude: item.longitude,
+            distanceMiles: item.distanceMiles,
+            label: item.attributes.PROJECT_NAME || 'Public housing site',
+          }))
+        );
+
+        applyListingFilters();
+
+        if (parcels.sourceQuality === 'fallback') {
+          addWarning(
+            'Parcel listing proxy is using the Atlanta fallback source for this area. Coverage/fields may be thinner than county-native sources.'
+          );
+        }
+
+        updateExternalLinks(cleaned);
+        setStatus('Analysis complete.', 'success');
+      } catch (error) {
+        console.error(error);
+        setStatus(
+          error instanceof Error
+            ? error.message
+            : 'Unable to complete the search due to an unexpected error.',
+          'error'
+        );
+      } finally {
+        elements.submit.disabled = false;
+        elements.submit.textContent = 'Analyze area';
+      }
+    }
+
+    elements.form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      runAnalysis(elements.input?.value || '');
+    });
+
+    const listingFilterInputs = [
+      elements.listingMin,
+      elements.listingMax,
+      elements.listingUnits,
+      elements.listingText,
+      elements.listingSort,
+      elements.listingOnMarket,
+    ];
+
+    for (const input of listingFilterInputs) {
+      input?.addEventListener('input', () => applyListingFilters());
+      input?.addEventListener('change', () => applyListingFilters());
+    }
+
+    elements.listingReset?.addEventListener('click', () => {
+      resetListingFilters();
+    });
+
+    for (const button of elements.presets) {
+      button.addEventListener('click', () => {
+        const query = button.getAttribute('data-query') || '';
+        if (!query) {
+          return;
+        }
+
+        elements.input.value = query;
+        runAnalysis(query);
+      });
+    }
+
+    runAnalysis(elements.input?.value || '30303 Atlanta GA');
+  </script>
+</BaseLayout>

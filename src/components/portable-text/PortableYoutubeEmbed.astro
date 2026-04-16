@@ -1,0 +1,17 @@
+---
+import type { TypedObject, Props as PortableTextNodeProps } from 'astro-portabletext/types';
+import YoutubeEmbed from '../YoutubeEmbed.astro';
+
+type YoutubeNode = TypedObject & {
+  _type: 'youtubeEmbed';
+  id?: string;
+  title?: string;
+};
+
+type Props = PortableTextNodeProps<YoutubeNode>;
+
+const { node } = Astro.props;
+const videoId = typeof node.id === 'string' ? node.id.trim() : '';
+---
+
+{videoId ? <YoutubeEmbed id={videoId} title={node.title} /> : null}
